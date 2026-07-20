@@ -6,7 +6,7 @@ Instead of relying on memory or sticky notes, users can log items through a simp
 
 ## Key Features
 - 🗂️ **Centralized inventory dashboard** across Food, Cosmetics, Medicines, and Groceries
-- 🎙️ **AI-powered voice entry** (English + Hindi/Hinglish) using Google Gemini API
+- 🎙️ **AI-powered voice entry** (English + Hindi) using Google Gemini API
 - 🚦 **Color-coded status indicators** (green/yellow/red) for freshness at a glance
 - 🍳 **AI-generated recipe suggestions** for ingredients nearing expiry, to reduce food waste
 - ⚠️ **Toxic ingredient alerts** for cosmetics and packaged food
