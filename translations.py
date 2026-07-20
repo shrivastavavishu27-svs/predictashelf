@@ -200,6 +200,18 @@ TRANSLATIONS = {
         "confirm_new_password_placeholder": "Confirm your new password",
         "reset_password_button": "Reset Password",
 
+        # Settings - Privacy & Security section
+        "privacy_security": "Privacy & Security",
+        "change_password_desc": "Update your password to keep your account secure",
+        "current_password": "Current Password",
+        "enter_current_password": "Enter current password",
+        "new_password": "New Password",
+        "enter_new_password": "Enter new password",
+        "password_requirements": "At least 8 characters, with uppercase, lowercase & a number",
+        "confirm_new_password": "Confirm New Password",
+        "reenter_new_password": "Re-enter new password",
+        "update_password": "Update Password",
+
         # Settings Page
         "settings": "Settings",
         "settings_title": "Settings",
@@ -549,6 +561,18 @@ TRANSLATIONS = {
         "confirm_new_password_label": "नए पासवर्ड की पुष्टि करें",
         "confirm_new_password_placeholder": "नया पासवर्ड फिर से दर्ज करें",
         "reset_password_button": "पासवर्ड रीसेट करें",
+
+        # Settings - Privacy & Security section
+        "privacy_security": "गोपनीयता और सुरक्षा",
+        "change_password_desc": "अपने खाते को सुरक्षित रखने के लिए पासवर्ड अपडेट करें",
+        "current_password": "वर्तमान पासवर्ड",
+        "enter_current_password": "वर्तमान पासवर्ड दर्ज करें",
+        "new_password": "नया पासवर्ड",
+        "enter_new_password": "नया पासवर्ड दर्ज करें",
+        "password_requirements": "कम से कम 8 अक्षर, बड़े-छोटे अक्षर और एक अंक के साथ",
+        "confirm_new_password": "नए पासवर्ड की पुष्टि करें",
+        "reenter_new_password": "नया पासवर्ड फिर से दर्ज करें",
+        "update_password": "पासवर्ड अपडेट करें",
 
         # Settings Page
         "settings": "सेटिंग्स",
