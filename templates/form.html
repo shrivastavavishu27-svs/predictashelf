@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>{{ T.form_title }} — {{ T.app_name }}</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=DM+Sans:wght@300;400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600&family=Noto+Sans+Gujarati:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#1a1a2e;--surface:#16213e;--card:#1e3a5f;--border:#3d5a80;
+  --digital-lavender:#FF6B6B;--neon-cyan:#FFD93D;--punchy-coral:#FF8E53;--violet:#FFB84D;
+  --text:#ffffff;--muted:#a8dadc;
+  --success:#4CC9F0;--warning:#FFD93D;--danger:#FF6B6B;
+  --font-serif:'Inter','Segoe UI',system-ui,sans-serif;
+  --font:'Inter','Segoe UI',system-ui,sans-serif;
+  --shadow:0 4px 20px rgba(0,0,0,0.3);--shadow-lg:0 12px 48px rgba(0,0,0,0.4);
+  --glow-lavender:0 0 10px rgba(255,107,107,0.2);
+  --glow-cyan:0 0 10px rgba(255,217,61,0.2);
+  --glow-coral:0 0 10px rgba(255,142,83,0.2);
+}
+
+/* Light Theme - Premium Minimal */
+body[data-theme="light"]{
+  --bg:#F5F0E8;--surface:#FFFDF8;--card:#FFFFFF;--border:#E2D9C8;
+  --digital-lavender:#B8860B;--neon-cyan:#D4760A;--punchy-coral:#D4760A;--violet:#9370DB;
+  --gold:#B8860B;--gold-dark:#8B6508;
+  --text:#2C2416;--muted:#7A6E60;
+  --success:#2E7D32;--warning:#E65100;--danger:#C62828;
+  --shadow:0 2px 8px rgba(44,36,22,0.10);--shadow-lg:0 6px 20px rgba(44,36,22,0.14);
+  --glow-lavender:0 0 10px rgba(184,134,11,0.18);
+  --glow-cyan:0 0 10px rgba(212,118,10,0.18);
+  --glow-coral:0 0 10px rgba(212,118,10,0.18);
+}
+
+/* Dark Theme */
+body[data-theme="dark"]{
+  --bg:#1a1a2e;--surface:#16213e;--card:#1e3a5f;--border:#3d5a80;
+  --digital-lavender:#FF6B6B;--neon-cyan:#FFD93D;--punchy-coral:#FF8E53;--violet:#FFB84D;
+  --text:#ffffff;--muted:#a8dadc;
+  --success:#4CC9F0;--warning:#FFD93D;--danger:#FF6B6B;
+  --shadow:0 4px 20px rgba(0,0,0,0.3);--shadow-lg:0 12px 48px rgba(0,0,0,0.4);
+  --glow-lavender:0 0 10px rgba(255,107,107,0.2);
+  --glow-cyan:0 0 10px rgba(255,217,61,0.2);
+  --glow-coral:0 0 10px rgba(255,142,83,0.2);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;padding:0;}
+body::before{content:'';position:fixed;inset:0;
+  background:radial-gradient(circle at 20% 50%, var(--digital-lavender) 0%, transparent 50%),
+             radial-gradient(circle at 80% 80%, var(--neon-cyan) 0%, transparent 50%),
+             radial-gradient(circle at 40% 20%, var(--violet) 0%, transparent 50%);
+  opacity:0.1;pointer-events:none;z-index:0;}
+
+/* HEADER BAR */
+.topbar{position:sticky;top:0;left:0;right:0;z-index:100;width:100%;background:rgba(26,26,46,0.95);
+  backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+  padding:0.8rem 1.8rem;display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 4px 24px rgba(0,0,0,0.3);gap:1rem;}
+body[data-theme="light"] .topbar{background:var(--card);box-shadow:var(--shadow);}
+.logo{display:flex;align-items:center;gap:0.55rem;flex-shrink:0;}
+.logo-mark{width:32px;height:32px;border-radius:10px;
+  background:linear-gradient(135deg,var(--digital-lavender),var(--violet));
+  display:flex;align-items:center;justify-content:center;font-size:0.95rem;
+  box-shadow:var(--glow-lavender);}
+.logo h1{font-family:var(--font-serif);font-size:1.15rem;font-weight:700;}
+.logo h1 em{color:var(--digital-lavender);font-style:italic;}
+.back-link{color:var(--muted);text-decoration:none;font-size:0.82rem;font-weight:500;
+  display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.8rem;
+  background:var(--card);border:1px solid var(--border);border-radius:8px;transition:all 0.2s;}
+.back-link:hover{color:var(--digital-lavender);border-color:var(--digital-lavender);}
+
+/* Lang switcher */
+.lang-switcher{display:flex;align-items:center;gap:0;
+  background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:var(--shadow);}
+.lang-btn{padding:0.38rem 0.7rem;font-family:var(--font);font-size:0.76rem;font-weight:600;
+  color:var(--muted);text-decoration:none;transition:all 0.18s;
+  border-right:1px solid var(--border);display:flex;align-items:center;gap:0.3rem;}
+.lang-btn:last-child{border-right:none;}
+.lang-btn:hover{background:rgba(167,139,250,0.2);color:var(--digital-lavender);}
+.lang-btn.active{background:linear-gradient(135deg,var(--digital-lavender),var(--violet));
+  color:#fff;font-weight:700;box-shadow:var(--glow-lavender);}
+
+.wrapper{position:relative;z-index:1;width:100%;max-width:510px;
+  margin:2rem auto 4rem;padding:0 1rem;animation:rise 0.5s ease both;}
+@keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+.brand{text-align:center;margin-bottom:1.6rem;}
+.logo-mark{width:32px;height:32px;border-radius:10px;
+  background:linear-gradient(135deg,var(--digital-lavender),var(--violet));
+  display:flex;align-items:center;justify-content:center;font-size:0.95rem;
+  box-shadow:var(--glow-lavender);animation:pulse 2s infinite;}
+.brand h1{font-family:var(--font-serif);font-size:1.5rem;font-weight:700;}
+.brand h1 em{color:var(--gold);font-style:italic;}
+.brand p{color:var(--muted);font-size:0.8rem;margin-top:0.28rem;}
+
+/* Category grid */
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.45rem;margin-bottom:1.4rem;width:100%;}
+.cat-btn{background:var(--surface);border:1.5px solid var(--border);border-radius:11px;
+  padding:0.65rem 0.25rem;cursor:pointer;text-align:center;transition:all 0.2s;
+  color:var(--muted);box-shadow:var(--shadow);}
+.cat-btn .ci{font-size:1.3rem;display:block;margin-bottom:0.22rem;}
+.cat-btn .cn{font-size:0.62rem;font-weight:600;}
+.cat-btn:hover{border-color:var(--gold);color:var(--text);transform:translateY(-2px);}
+.cat-btn.active{border-color:var(--gold);background:linear-gradient(135deg,#2a200a,#3a2e08);
+  color:#f5c842;box-shadow:0 4px 14px rgba(201,151,58,0.35);}
+
+.form-card{background:linear-gradient(135deg,var(--surface),rgba(167,139,250,0.05));border:1px solid var(--border);border-radius:20px;
+  padding:2rem;box-shadow:var(--shadow-lg);position:relative;overflow:hidden;}
+
+.field{margin-bottom:1rem;}
+.form-label{display:block;font-size:0.85rem;font-weight:600;color:var(--text);margin-bottom:0.5rem;}
+label .hint{font-weight:400;text-transform:none;letter-spacing:0;color:var(--gold);}
+input[type=text],input[type=date],input[type=number],textarea{
+  width:100%;background:var(--card);border:1px solid var(--border);border-radius:10px;
+  color:var(--text);font-family:var(--font);font-size:0.9rem;
+  padding:0.72rem 0.9rem;outline:none;transition:all 0.2s;-webkit-appearance:none;}
+.form-input:focus{outline:none;border-color:var(--neon-cyan);box-shadow:var(--glow-cyan);}
+input::placeholder,textarea::placeholder{color:#b5a590;}
+textarea{resize:none;height:68px;line-height:1.5;}
+
+/* Name shelf tag */
+.name-row{position:relative;}
+.shelf-tag{position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);
+  font-size:0.67rem;font-weight:700;color:var(--gold-dark);
+  background:rgba(201,151,58,0.1);padding:0.18rem 0.5rem;border-radius:6px;display:none;}
+
+/* Expiry preview */
+.ep-card{background:var(--card);border:1.5px solid var(--border);border-radius:12px;
+  padding:0.9rem 1rem;margin-top:0.55rem;display:none;}
+.ep-card.show{display:block;animation:fadeIn 0.3s ease;}
+.ep-card.good{border-color:#b8d8c0;background:#f3faf5;}
+.ep-card.warn{border-color:#e8c898;background:#fdf8ee;}
+.ep-card.bad {border-color:#e8b0b0;background:#fdf3f3;}
+.ep-row{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.35rem;}
+.ep-status{font-size:0.69rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;}
+.ep-status.good{color:var(--green);}.ep-status.warn{color:var(--orange);}.ep-status.bad{color:var(--red);}
+.ep-date{font-size:0.95rem;font-weight:700;color:var(--text);font-family:var(--font-serif);}
+.ep-sub{font-size:0.76rem;color:var(--muted);}
+
+/* Recipe chips */
+.recipe-chips{margin-top:0.65rem;padding-top:0.65rem;border-top:1px solid var(--border);}
+.recipe-chips h5{font-size:0.67rem;font-weight:700;letter-spacing:0.06em;
+  text-transform:uppercase;color:var(--orange);margin-bottom:0.4rem;}
+.rchip{display:inline-flex;align-items:center;gap:0.3rem;
+  background:rgba(196,97,42,0.07);border:1px solid rgba(196,97,42,0.2);
+  color:var(--orange);font-size:0.71rem;font-weight:600;
+  padding:0.22rem 0.6rem;border-radius:999px;margin:0.15rem 0.15rem 0 0;}
+
+/* Recipe and toxic styles */
+.recipe-row{margin-bottom:1rem;}
+.recipe-row h5{font-size:0.75rem;font-weight:600;color:var(--muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em;}
+.rchips{display:flex;flex-wrap:wrap;gap:0.4rem;}
+.rchip{background:linear-gradient(135deg,var(--neon-cyan),rgba(0,229,255,0.1));color:var(--text);padding:0.3rem 0.6rem;border-radius:8px;font-size:0.7rem;font-weight:500;cursor:pointer;transition:all 0.2s;border:1px solid rgba(0,229,255,0.3);}
+.rchip:hover{transform:scale(1.05);box-shadow:var(--glow-cyan);}
+.toxic-row{margin-bottom:1rem;}
+.toxic-row h5{font-size:0.75rem;font-weight:600;color:var(--punchy-coral);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em;}
+.tchips{display:flex;flex-wrap:wrap;gap:0.4rem;}
+.tchip{padding:0.3rem 0.6rem;border-radius:8px;font-size:0.7rem;font-weight:500;white-space:nowrap;}
+.tchip.high{background:rgba(255,107,107,0.15);color:var(--punchy-coral);border:1px solid rgba(255,107,107,0.3);}
+.tchip.moderate{background:rgba(245,158,11,0.15);color:var(--warning);border:1px solid rgba(245,158,11,0.3);}
+.tchip.critical{background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);animation:blink 1s infinite;}
+
+/* Loss alert */
+.loss-alert{background:rgba(179,58,58,0.06);border:1px solid rgba(179,58,58,0.2);
+  border-radius:8px;padding:0.55rem 0.85rem;margin-top:0.42rem;
+  font-size:0.77rem;color:var(--red);display:none;font-weight:500;}
+.loss-alert.show{display:block;}
+
+/* Override */
+.override-row{display:flex;align-items:center;gap:0.45rem;margin-top:0.6rem;
+  cursor:pointer;font-size:0.78rem;color:var(--muted);}
+.override-row input{accent-color:var(--gold);cursor:pointer;width:14px;height:14px;}
+.override-sec{display:none;margin-top:0.6rem;}
+.override-sec.show{display:block;animation:fadeIn 0.3s ease;}
+
+/* Price */
+.price-wrap{position:relative;}
+.price-sym{position:absolute;left:0.88rem;top:50%;transform:translateY(-50%);
+  color:var(--muted);font-size:0.88rem;}
+.price-wrap input{padding-left:1.75rem;}
+
+.divider{text-align:center;color:var(--border);font-size:0.7rem;
+  letter-spacing:0.1em;margin:0.9rem 0;position:relative;}
+.divider::before,.divider::after{content:'';position:absolute;top:50%;width:36%;height:1px;background:var(--border);}
+.divider::before{left:0;}.divider::after{right:0;}
+
+.submit-btn{width:100%;padding:0.92rem;margin-top:0.75rem;
+  background:linear-gradient(135deg,var(--neon-cyan),var(--digital-lavender));color:#fff;
+  font-family:var(--font);font-size:0.93rem;font-weight:700;
+  border:none;border-radius:12px;cursor:pointer;
+  box-shadow:var(--glow-cyan);transition:all 0.2s;letter-spacing:0.02em;}
+.submit-btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-lg),0 0 20px rgba(0,229,255,0.3);}
+
+.flash{padding:0.72rem 1rem;border-radius:10px;margin-bottom:0.9rem;
+  font-size:0.82rem;font-weight:500;display:flex;align-items:center;gap:0.5rem;}
+.flash.error{background:rgba(179,58,58,0.07);color:var(--red);border:1px solid rgba(179,58,58,0.2);}
+.flash.success{background:rgba(61,122,79,0.07);color:var(--green);border:1px solid rgba(61,122,79,0.2);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body data-theme="{{ session.get('theme', 'dark') }}" class="{{ session.get('theme', 'dark') }}">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-mark">🏺</div>
+    <h1>Predicta<em>Shelf</em></h1>
+  </div>
+  <a href="{{ url_for('index') }}" class="back-link">← {{ T.back_dashboard }}</a>
+</div>
+
+<div class="wrapper">
+  {% with messages = get_flashed_messages() %}{% if messages %}{% for msg in messages %}
+    {% set p = msg.split('|') %}
+    <div class="flash {{ p[0] }}">{{ '✅' if p[0]=='success' else '❌' }} {{ p[1] }}</div>
+  {% endfor %}{% endif %}{% endwith %}
+
+  <!-- Category -->
+  <div class="cat-grid">
+    <div class="cat-btn active" onclick="selectCat(this,'Food')"><span class="ci">🍎</span><span class="cn">{{ T.cat_food }}</span></div>
+    <div class="cat-btn" onclick="selectCat(this,'Cosmetics')"><span class="ci">💄</span><span class="cn">{{ T.cat_beauty }}</span></div>
+    <div class="cat-btn" onclick="selectCat(this,'Groceries')"><span class="ci">🛒</span><span class="cn">{{ T.cat_grocery }}</span></div>
+    <div class="cat-btn" onclick="selectCat(this,'Medicine')"><span class="ci">💊</span><span class="cn">{{ T.cat_medicine }}</span></div>
+      </div>
+
+  <div class="card">
+    <form action="{{ url_for('add_product') }}" method="POST">
+      <input type="hidden" name="category" id="hiddenCat" value="Food">
+
+      <div class="field">
+        <label>{{ T.label_name }}</label>
+        <div class="name-row">
+          <input type="text" name="name" id="productName" required autocomplete="off"
+            placeholder="{{ T.name_placeholder }}" oninput="onNameChange(this.value)">
+          <span class="shelf-tag" id="shelfTag"></span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>{{ T.label_purchase }} <span class="hint">{{ T.purchase_hint }}</span></label>
+        <input type="date" name="purchase_date" id="purchaseDate" onchange="updatePreview()" max="">
+        <div class="ep-card" id="epCard">
+          <div class="ep-row"><span id="epIcon">✅</span><span class="ep-status good" id="epStatus"></span></div>
+          <div class="ep-date" id="epDate"></div>
+          <div class="ep-sub" id="epSub"></div>
+          <div class="recipe-chips" id="recipeSection" style="display:none">
+            <h5>{{ T.you_can_make }}</h5>
+            <div id="recipeChipsInner"></div>
+          </div>
+          <div class="toxic-sec" id="toxicSection" style="display:none">
+            <h5>{{ T.toxic_watch }}</h5>
+            <div id="toxicInner"></div>
+          </div>
+        </div>
+      </div>
+
+      <label class="override-row">
+        <input type="checkbox" id="ovCheck" onchange="toggleOverride(this.checked)">
+        {{ T.manual_override }}
+      </label>
+      <div class="override-sec" id="ovSec">
+        <div class="field" style="margin-bottom:0">
+          <label>{{ T.label_manual_expiry }}</label>
+          <input type="date" name="expiry_override" id="expiryOverride">
+        </div>
+      </div>
+
+      <div class="divider">· · ·</div>
+
+      <div class="field">
+        <label>{{ T.label_price }} <span class="hint" style="font-size:0.68rem">{{ T.price_hint }}</span></label>
+        <div class="price-wrap">
+          <span class="price-sym">₹</span>
+          <input type="number" name="price" id="priceInput" placeholder="0" min="0" step="1" oninput="checkLoss()">
+        </div>
+        <div class="loss-alert" id="lossAlert"></div>
+      </div>
+
+      <div class="field">
+        <label>{{ T.label_note }} <span class="hint" style="font-size:0.68rem">{{ T.note_hint }}</span></label>
+        <textarea name="note" placeholder="{{ T.note_placeholder }}"></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn">{{ T.save_btn }}</button>
+    </form>
+  </div>
+</div>
+
+<script>
+const LANG = "{{ lang }}";
+const SHELF={milk:3,doodh:3,dudh:3,cream:5,butter:30,cheese:14,paneer:4,yogurt:7,dahi:5,curd:5,bread:6,pav:4,roti:2,egg:21,anda:21,inda:21,chicken:2,mutton:2,fish:2,tomato:5,onion:30,potato:14,carrot:10,spinach:4,palak:4,apple:14,banana:5,kela:5,mango:5,keri:5,juice:3,rice:365,flour:180,atta:180,maida:180,oil:365,ghee:180,sugar:730,dal:180,noodles:180,maggi:180,biscuit:90,chocolate:180,chips:60,sauce:30,ketchup:30,pickle:180,jam:90,honey:730,moisturizer:365,lotion:365,sunscreen:180,foundation:180,mascara:90,kajal:180,shampoo:365,conditioner:365,'hair oil':365,'body wash':365,soap:365,deodorant:365,perfume:730,'nail polish':365,tablet:365,capsule:365,syrup:180,tea:730,coffee:365,oats:365};
+const DEFAULTS={Food:7,Cosmetics:365,Medicine:365,Groceries:90};
+const RECIPES={milk:['Kheer','Paneer','Chai'],doodh:['Kheer','Chai'],bread:['French Toast','Upma','Pakora'],egg:['Omelette','Bhurji'],anda:['Omelette'],banana:['Smoothie','Pancake'],kela:['Smoothie'],tomato:['Soup','Chutney'],paneer:['Bhurji','Tikka'],yogurt:['Raita','Lassi'],dahi:['Raita','Lassi']};
+const TOXIC={Food:[{n:'MSG (E621)',r:'high'},{n:'Sodium Benzoate',r:'moderate'},{n:'Trans Fat',r:'high'},{n:'Artificial Colors',r:'high'}],Cosmetics:[{n:'Parabens',r:'high'},{n:'SLS/SLES',r:'moderate'},{n:'Formaldehyde',r:'critical'},{n:'Mercury',r:'critical'}],Groceries:[{n:'BHA/BHT',r:'moderate'},{n:'Sodium Nitrate',r:'high'}],Medicine:[{n:'Expired Compounds',r:'critical'}]};
+
+const T_msgs = {
+  en:{
+    already:'Already Expired!',
+    today:'Expires Today!',
+    good:'days fresh',
+    warn_days:'days remaining',
+    crit_days:'Only {n} day(s)!',
+    msg_already:'This item has likely already gone bad.',
+    msg_today:'Use it immediately!',
+    msg_warn:'Plan to use this week.',
+    msg_good:'Based on {n}-day shelf life.',
+    metal_owned:'days owned',
+    you_can_make:'🍳 You can still make',
+    loss_exp:'💸 Expired! ₹{p} wasted.',
+    loss_soon:'💸 Expires in {n} day(s) — ₹{p} at risk!'
+  },
+  hi:{
+    already:'पहले ही एक्सपायर!',
+    today:'आज एक्सपायर!',
+    good:'दिन ताज़ा',
+    warn_days:'दिन बचे',
+    crit_days:'सिर्फ {n} दिन!',
+    msg_already:'यह आइटम शायद खराब हो गया है।',
+    msg_today:'तुरंत इस्तेमाल करें!',
+    msg_warn:'इस हफ्ते इस्तेमाल करें।',
+    msg_good:'{n} दिन की शेल्फ लाइफ।',
+    metal_owned:'दिन से आपके पास',
+    you_can_make:'🍳 अभी भी बना सकती हैं',
+    loss_exp:'💸 एक्सपायर! ₹{p} बर्बाद।',
+    loss_soon:'💸 {n} दिन में — ₹{p} का नुकसान!'
+  },
+};
+
+let currentCat='Food', computedExpiry='', currentName='';
+const TM = T_msgs[LANG] || T_msgs.en;
+
+// English 'day(s)' ko n ke hisaab se 'day'/'days' bana do (Hindi strings mein
+// yeh pattern hota hi nahi, so no-op rahega unke liye).
+function fixDayPlural(text,n){return text.replace('day(s)', Math.abs(n)===1?'day':'days');}
+
+function getShelf(name,cat){const n=name.toLowerCase();for(const[k,v]of Object.entries(SHELF)){if(n.includes(k))return v;}return DEFAULTS[cat]||7;}
+
+function selectCat(el,cat){document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');document.getElementById('hiddenCat').value=cat;currentCat=cat;onNameChange(document.getElementById('productName').value);}
+
+function onNameChange(val){
+  currentName=val;
+  const days=getShelf(val,currentCat);
+  const tag=document.getElementById('shelfTag');
+  if(val.length>1){tag.textContent=`~${days}d`;tag.style.display='block';}else tag.style.display='none';
+  updatePreview();showToxic();
+}
+
+function updatePreview(){
+  const name=document.getElementById('productName').value;
+  const purchaseStr=document.getElementById('purchaseDate').value;
+  if(!name&&!purchaseStr)return;
+  const purchase=purchaseStr?new Date(purchaseStr):new Date();
+  const days=getShelf(name,currentCat);
+  const expiry=new Date(purchase);expiry.setDate(expiry.getDate()+days);
+  const today=new Date();today.setHours(0,0,0,0);
+  const diff=Math.ceil((expiry-today)/86400000);
+  computedExpiry=expiry.toISOString().split('T')[0];
+
+  const card=document.getElementById('epCard');
+  const icon=document.getElementById('epIcon');
+  const status=document.getElementById('epStatus');
+  const dateEl=document.getElementById('epDate');
+  const sub=document.getElementById('epSub');
+
+  card.className='ep-card show';
+  dateEl.textContent=expiry.toLocaleDateString(LANG==='hi'?'hi-IN':LANG==='gu'?'gu-IN':'en-IN',{day:'numeric',month:'long',year:'numeric'});
+
+  if(diff<0){card.classList.add('bad');icon.textContent='💀';status.className='ep-status bad';status.textContent=TM.already;sub.textContent=TM.msg_already;}
+  else if(diff===0){card.classList.add('bad');icon.textContent='🚨';status.className='ep-status bad';status.textContent=TM.today;sub.textContent=TM.msg_today;showRecipes(name);}
+  else if(diff<=2){card.classList.add('warn');icon.textContent='⚡';status.className='ep-status warn';status.textContent=fixDayPlural(TM.crit_days.replace('{n}',diff),diff);sub.textContent=TM.msg_warn;showRecipes(name);}
+  else if(diff<=7){card.classList.add('warn');icon.textContent='⚠️';status.className='ep-status warn';status.textContent=`${diff} ${TM.warn_days}`;sub.textContent=TM.msg_warn;showRecipes(name);}
+  else{icon.textContent='✅';status.className='ep-status good';status.textContent=`${diff} ${TM.good}`;sub.textContent=TM.msg_good.replace('{n}',days);document.getElementById('recipeSection').style.display='none';}
+
+  checkLoss();
+}
+
+function showRecipes(name){
+  if(['Cosmetics','Medicine'].includes(currentCat)){document.getElementById('recipeSection').style.display='none';return;}
+  const n=name.toLowerCase();let found=[];
+  for(const[k,v]of Object.entries(RECIPES)){
+    if(n.includes(k) && k !== 'jewelry'){found=v;break;}
+  }
+  const sec=document.getElementById('recipeSection');
+  const inner=document.getElementById('recipeChipsInner');
+  if(found.length){inner.innerHTML=found.map(r=>`<span class="rchip">🍳 ${r}</span>`).join('');sec.style.display='block';}
+  else sec.style.display='none';
+  document.querySelector('.recipe-chips h5').textContent=TM.you_can_make;
+}
+
+function showToxic(){
+  const toxics=TOXIC[currentCat]||[];
+  const sec=document.getElementById('toxicSection');
+  const inner=document.getElementById('toxicInner');
+  if(toxics.length){inner.innerHTML=toxics.map(t=>`<span class="tchip ${t.r}">⚠️ ${t.n}</span>`).join('');sec.style.display='block';}
+  else sec.style.display='none';
+}
+
+function toggleOverride(c){document.getElementById('ovSec').className=c?'override-sec show':'override-sec';}
+
+function checkLoss(){
+  const price=parseFloat(document.getElementById('priceInput').value)||0;
+  const alert=document.getElementById('lossAlert');
+  if(!computedExpiry||price<=0){alert.classList.remove('show');return;}
+  const exp=new Date(computedExpiry);const today=new Date();today.setHours(0,0,0,0);
+  const diff=Math.ceil((exp-today)/86400000);
+  if(diff<=3){alert.classList.add('show');alert.textContent=diff<0?TM.loss_exp.replace('{p}',price):fixDayPlural(TM.loss_soon.replace('{n}',diff),diff).replace('{p}',price);}
+  else alert.classList.remove('show');
+}
+
+const todayStr=new Date().toISOString().split('T')[0];
+document.getElementById('purchaseDate').max=todayStr;
+// Don't auto-set purchase date or show expiry preview
+document.getElementById('ovSec').className='override-sec';
+</script>
+</body>
+</html>

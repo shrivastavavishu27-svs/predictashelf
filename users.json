@@ -1,0 +1,25 @@
+{
+    "vaishnavi1234": {
+        "id": "0480a80a-a43d-475b-b493-7f78c56d78a1",
+        "username": "vaishnavi1234",
+        "email": "shrivastavavishu206@gmail.com",
+        "password": "2401946d48f744c7aca0f53424ef476ac4c08513927ef7238dc1823c6dd0f1be",
+        "full_name": "Vaishnavi",
+        "created_at": "2026-04-03 08:47:47",
+        "is_active": true,
+        "theme": "dark",
+        "updated_at": "2026-07-18 14:00:24",
+        "avatar": null
+    },
+    "Vishu_27": {
+        "id": "f410fe54-824a-4d6c-aafd-08801beccb24",
+        "username": "Vishu_27",
+        "email": "vishu@gmail.com",
+        "password": "12d46936f8643135c471d01a09c74cdaca5a88f61a663f423a710de15b0b0437",
+        "full_name": "Vishu",
+        "created_at": "2026-06-28 18:38:27",
+        "is_active": true,
+        "theme": "dark",
+        "updated_at": "2026-07-18 14:09:52"
+    }
+}

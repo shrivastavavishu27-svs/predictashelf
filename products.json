@@ -1,0 +1,156 @@
+[
+    {
+        "id": 1774950070999,
+        "name": "Milk",
+        "category": "Groceries",
+        "expiry": "2026-03-31",
+        "note": "",
+        "added": "2026-03-31"
+    },
+    {
+        "id": 1774950702258,
+        "name": "Banana",
+        "category": "Food",
+        "expiry": "2026-04-05",
+        "purchase_date": "2026-03-31",
+        "note": "",
+        "price": "20",
+        "added": "2026-03-31"
+    },
+    {
+        "id": 1774952566542,
+        "name": "Orange",
+        "category": "Food",
+        "expiry": "2026-04-10",
+        "purchase_date": "2026-03-31",
+        "note": "",
+        "price": "0",
+        "added": "2026-03-31"
+    },
+    {
+        "id": 1774954617106,
+        "name": "egg",
+        "category": "Food",
+        "expiry": "2026-04-21",
+        "purchase_date": "2026-03-31",
+        "note": "",
+        "price": "0",
+        "added": "2026-03-31"
+    },
+    {
+        "id": 1774955825355,
+        "name": "cheese",
+        "category": "Food",
+        "expiry": "2026-03-30",
+        "purchase_date": "2026-03-16",
+        "note": "",
+        "price": "0",
+        "added": "2026-03-31"
+    },
+    {
+        "id": 1774972061509,
+        "name": "Banana",
+        "category": "Food",
+        "expiry": "2026-03-29",
+        "purchase_date": "2026-03-24",
+        "note": "",
+        "price": "0",
+        "added": "2026-03-31"
+    },
+    {
+        "id": 1775057253329,
+        "name": "Mosturise",
+        "category": "Cosmetics",
+        "expiry": "2027-04-01",
+        "purchase_date": "2026-04-01",
+        "note": "",
+        "price": "0",
+        "added": "2026-04-01"
+    },
+    {
+        "id": 1775057271615,
+        "name": "lipstick",
+        "category": "Cosmetics",
+        "expiry": "2027-04-01",
+        "purchase_date": "2026-04-01",
+        "note": "",
+        "price": "0",
+        "added": "2026-04-01"
+    },
+    {
+        "id": 1775098587313,
+        "name": "dudh",
+        "category": "Food",
+        "expiry": "2026-04-05",
+        "purchase_date": "2026-04-02",
+        "note": "",
+        "price": "0",
+        "added": "2026-04-02"
+    },
+    {
+        "id": 1775674562976,
+        "name": "Combiflame",
+        "category": "Medicine",
+        "expiry": "2027-04-04",
+        "purchase_date": "2026-04-04",
+        "note": "",
+        "price": "0",
+        "user_id": "0480a80a-a43d-475b-b493-7f78c56d78a1",
+        "added": "2026-04-09"
+    },
+    {
+        "id": 1775707670976,
+        "name": "Kajal",
+        "category": "Cosmetics",
+        "expiry": "2026-10-06",
+        "purchase_date": "2026-04-09",
+        "note": "",
+        "price": "0",
+        "user_id": "0480a80a-a43d-475b-b493-7f78c56d78a1",
+        "added": "2026-04-09"
+    },
+    {
+        "id": 1775708652209,
+        "name": "Milk",
+        "category": "Food",
+        "expiry": "2026-04-09",
+        "purchase_date": "2026-04-06",
+        "note": "",
+        "price": "0",
+        "user_id": "0480a80a-a43d-475b-b493-7f78c56d78a1",
+        "added": "2026-04-09"
+    },
+    {
+        "id": 1782555202141,
+        "name": "Bread",
+        "category": "Food",
+        "expiry": "2026-07-02",
+        "purchase_date": "2026-06-26",
+        "note": "",
+        "price": "0",
+        "user_id": "0480a80a-a43d-475b-b493-7f78c56d78a1",
+        "added": "2026-06-27"
+    },
+    {
+        "id": 1782620970219,
+        "name": "Zerodol SP",
+        "category": "Medicine",
+        "expiry": "2027-05-27",
+        "purchase_date": "2026-05-27",
+        "note": "",
+        "price": "0",
+        "user_id": "0480a80a-a43d-475b-b493-7f78c56d78a1",
+        "added": "2026-06-28"
+    },
+    {
+        "id": 1782703965672,
+        "name": "Pickle",
+        "category": "Groceries",
+        "expiry": "2026-12-26",
+        "purchase_date": "2026-06-29",
+        "note": "",
+        "price": "0",
+        "user_id": "0480a80a-a43d-475b-b493-7f78c56d78a1",
+        "added": "2026-06-29"
+    }
+]

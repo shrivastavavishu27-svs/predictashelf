@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>{{ T.profile_title if T.profile_title else 'Profile' }} - {{ T.app_name }}</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=DM+Sans:wght@300;400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600&family=Noto+Sans+Gujarati:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#1a1a2e;--surface:#16213e;--card:#1e3a5f;--border:#3d5a80;
+  --digital-lavender:#FF6B6B;--neon-cyan:#FFD93D;--punchy-coral:#FF8E53;--violet:#FFB84D;
+  --text:#ffffff;--muted:#a8dadc;
+  --success:#4CC9F0;--warning:#FFD93D;--danger:#FF6B6B;
+  --font-serif:'Inter','Segoe UI',system-ui,sans-serif;
+  --font:'Inter','Segoe UI',system-ui,sans-serif;
+  --topbar-h:60px;
+}
+body[data-theme="light"]{
+  --bg:#F5F0E8;--surface:#FFFDF8;--card:#FFFFFF;--border:#E2D9C8;
+  --digital-lavender:#B8860B;--neon-cyan:#D4760A;--punchy-coral:#D4760A;--violet:#9370DB;
+  --text:#2C2416;--muted:#7A6E60;
+  --success:#2E7D32;--warning:#E65100;--danger:#C62828;
+}
+body[data-theme="dark"]{
+  --bg:#1a1a2e;--surface:#16213e;--card:#1e3a5f;--border:#3d5a80;
+  --digital-lavender:#FF6B6B;--neon-cyan:#FFD93D;--punchy-coral:#FF8E53;--violet:#FFB84D;
+  --text:#ffffff;--muted:#a8dadc;
+  --success:#4CC9F0;--warning:#FFD93D;--danger:#FF6B6B;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hidden;}
+.icon{width:1em;height:1em;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;vertical-align:-0.15em;flex-shrink:0;}
+
+/* ── TOPBAR ── */
+.topbar{height:var(--topbar-h);background:var(--surface);border-bottom:1px solid var(--border);
+  padding:0 1.6rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.logo{display:flex;align-items:center;gap:0.55rem;}
+.logo-mark{width:30px;height:30px;border-radius:9px;
+  background:linear-gradient(135deg,var(--digital-lavender),var(--violet));
+  display:flex;align-items:center;justify-content:center;font-size:0.9rem;}
+.logo h1{font-family:var(--font-serif);font-size:1.1rem;font-weight:700;}
+.logo h1 em{color:var(--digital-lavender);font-style:italic;}
+.nav-links{display:flex;align-items:center;gap:0.4rem;}
+.nav-link{display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.75rem;
+  font-size:0.78rem;font-weight:500;color:var(--muted);text-decoration:none;border-radius:8px;transition:all 0.15s;}
+.nav-link:hover{color:var(--text);background:var(--card);}
+.nav-link.active{background:linear-gradient(135deg,var(--digital-lavender),var(--violet));color:#fff;}
+
+/* ── APP SHELL (fills remaining viewport, no page scroll) ── */
+.shell{height:calc(100vh - var(--topbar-h));display:flex;overflow:hidden;}
+
+/* ── SIDEBAR ── */
+.sidebar{width:272px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;height:100%;}
+.sidebar-profile{padding:1.6rem 1.3rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;flex-shrink:0;}
+.sidebar-avatar{width:60px;height:60px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--digital-lavender),var(--violet));
+  display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;color:#fff;}
+.sidebar-name{font-size:1.05rem;font-weight:700;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sidebar-sub{display:flex;align-items:center;gap:0.35rem;font-size:0.82rem;color:var(--muted);margin-top:0.2rem;}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--success);flex-shrink:0;}
+
+.sidebar-nav{flex:1 1 auto;overflow-y:auto;padding:0.9rem 0.8rem;display:flex;flex-direction:column;gap:0.2rem;}
+.nav-item{display:flex;align-items:center;gap:0.7rem;padding:0.7rem 0.85rem;font-size:0.85rem;font-weight:500;
+  color:var(--muted);border-radius:10px;cursor:pointer;transition:all 0.15s;border:none;background:none;
+  text-align:left;width:100%;font-family:var(--font);}
+.nav-item:hover{background:var(--card);color:var(--text);}
+.nav-item.active{background:linear-gradient(135deg,var(--digital-lavender),var(--violet));color:#fff;font-weight:600;}
+
+.sidebar-footer{flex-shrink:0;border-top:1px solid var(--border);padding:0.8rem;}
+.sidebar-footer .nav-item{color:var(--danger);}
+.sidebar-footer .nav-item:hover{background:var(--danger);color:#fff;}
+
+/* ── CONTENT PANE ── */
+.content-pane{flex:1 1 0;min-width:0;height:100%;overflow-y:auto;display:flex;flex-direction:column;}
+.content-inner{max-width:680px;width:100%;margin:0 auto;padding:2.2rem 2rem 3rem;flex:1;}
+
+.section{display:none;}
+.section.active{display:block;animation:fade 0.15s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+.section-head{margin-bottom:1.6rem;}
+.section-title{font-family:var(--font-serif);font-size:1.4rem;font-weight:700;}
+.section-desc{color:var(--muted);font-size:0.87rem;margin-top:0.3rem;}
+
+.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.2rem;}
+.panel-title{font-size:0.95rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;}
+
+/* Info list (Overview) */
+.info-list{display:flex;flex-direction:column;}
+.info-row{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:0.75rem 0;border-bottom:1px solid var(--border);}
+.info-row:last-child{border-bottom:none;}
+.info-label{display:flex;align-items:center;gap:0.55rem;color:var(--muted);font-weight:500;font-size:0.85rem;}
+.info-value{color:var(--text);font-weight:600;font-size:0.87rem;text-align:right;}
+.info-value.ok{color:var(--success);display:flex;align-items:center;gap:0.35rem;}
+
+.action-row{display:flex;gap:0.7rem;flex-wrap:wrap;}
+.action-row .btn{flex:1;min-width:150px;}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.7rem 1.1rem;
+  font-family:var(--font);font-size:0.85rem;font-weight:600;border-radius:10px;
+  text-decoration:none;cursor:pointer;transition:all 0.15s;border:none;white-space:nowrap;}
+.btn-primary{background:linear-gradient(135deg,var(--digital-lavender),var(--violet));color:#fff;}
+.btn-primary:hover{filter:brightness(1.08);}
+.btn-ghost{background:var(--surface);color:var(--text);border:1px solid var(--border);}
+.btn-ghost:hover{border-color:var(--digital-lavender);}
+.btn-danger{background:linear-gradient(135deg,var(--punchy-coral),#ef4444);color:#fff;}
+.btn-danger:hover{filter:brightness(1.08);}
+.btn-full{width:100%;}
+
+/* Forms */
+.form-group{margin-bottom:1.1rem;}
+.form-label{display:block;font-size:0.82rem;font-weight:600;margin-bottom:0.4rem;}
+.form-input{width:100%;padding:0.7rem 0.85rem;font-family:var(--font);font-size:0.88rem;
+  background:var(--surface);border:1px solid var(--border);border-radius:9px;color:var(--text);transition:all 0.15s;}
+.form-input:focus{outline:none;border-color:var(--digital-lavender);}
+.form-input:read-only{opacity:0.55;cursor:not-allowed;}
+.form-help{font-size:0.75rem;color:var(--muted);margin-top:0.35rem;}
+
+/* Theme / language pickers */
+.pick-row{display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;margin-bottom:1rem;}
+.pick-opt{padding:0.9rem;border:2px solid var(--border);border-radius:12px;cursor:pointer;text-align:center;
+  background:var(--surface);transition:all 0.15s;}
+.pick-opt:hover{border-color:var(--digital-lavender);}
+.pick-opt.selected{border-color:var(--digital-lavender);background:rgba(255,107,107,0.08);}
+.pick-icon{font-size:1.3rem;margin-bottom:0.25rem;}
+.pick-name{font-size:0.82rem;font-weight:600;}
+
+/* Toggle */
+.toggle-row{display:flex;justify-content:space-between;align-items:center;padding:0.8rem 0;border-bottom:1px solid var(--border);}
+.toggle-row:last-of-type{border-bottom:none;}
+.toggle-title{font-size:0.87rem;font-weight:600;}
+.toggle-desc{font-size:0.76rem;color:var(--muted);margin-top:0.15rem;}
+.toggle-switch{position:relative;width:44px;height:24px;background:var(--surface);border:1px solid var(--border);
+  border-radius:13px;cursor:pointer;transition:all 0.15s;flex-shrink:0;}
+.toggle-switch.active{background:linear-gradient(135deg,var(--digital-lavender),var(--violet));border-color:var(--digital-lavender);}
+.toggle-switch::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;background:#fff;border-radius:50%;transition:all 0.15s;}
+.toggle-switch.active::after{left:22px;}
+
+/* Data cards */
+.data-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.1rem;margin-bottom:1rem;}
+.data-card.danger-card{border-color:var(--danger);}
+.data-card-title{font-size:0.87rem;font-weight:600;display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;}
+.data-card-value{font-size:1.35rem;font-weight:800;color:var(--digital-lavender);}
+.data-card-desc{font-size:0.76rem;color:var(--muted);margin-top:0.3rem;}
+.divider{height:1px;background:var(--border);margin:1.4rem 0;}
+.star{font-size:1.6rem;cursor:pointer;transition:all 0.15s;color:var(--border);}
+.star.active{color:var(--warning);}
+.star:hover{transform:scale(1.12);}
+
+/* Flash */
+.flash{padding:0.7rem 0.9rem;border-radius:10px;margin-bottom:1.2rem;font-size:0.82rem;font-weight:500;
+  display:flex;align-items:center;gap:0.5rem;}
+.flash.success{background:rgba(76,201,240,0.1);color:var(--success);border:1px solid rgba(76,201,240,0.25);}
+.flash.error{background:rgba(255,107,107,0.1);color:var(--danger);border:1px solid rgba(255,107,107,0.25);}
+
+/* ── MOBILE: drop the fixed-height shell, become a normal scrolling page ── */
+@media(max-width:860px){
+  body{overflow:auto;}
+  .shell{height:auto;flex-direction:column;overflow:visible;}
+  .sidebar{width:100%;height:auto;flex-direction:column;border-right:none;border-bottom:1px solid var(--border);}
+  .sidebar-nav{flex-direction:row;overflow-x:auto;padding:0.7rem;scrollbar-width:none;}
+  .sidebar-nav::-webkit-scrollbar{display:none;}
+  .nav-item{flex-shrink:0;white-space:nowrap;}
+  .sidebar-footer{border-top:none;}
+  .content-pane{height:auto;overflow-y:visible;}
+  .content-inner{padding:1.4rem 1.1rem 2.5rem;}
+  .pick-row{grid-template-columns:1fr;}
+  .topbar{padding:0 0.9rem;}
+}
+</style>
+</head>
+<body data-theme="{{ session.get('theme', 'dark') }}" class="{{ session.get('theme', 'dark') }}">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-mark">🏺</div>
+    <h1>Predicta<em>Shelf</em></h1>
+  </div>
+  <div class="nav-links">
+    <a href="{{ url_for('index') }}" class="nav-link">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
+      {{ T.home if T.home else 'Home' }}
+    </a>
+    <a href="{{ url_for('profile') }}" class="nav-link active">
+      <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.5-4 4.2-6 7.5-6s6 2 7.5 6"/></svg>
+      {{ T.profile if T.profile else 'Profile' }}
+    </a>
+  </div>
+</div>
+
+<!-- APP SHELL -->
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-profile">
+      <div class="sidebar-avatar" style="{% if user.avatar %}background-image:url('{{ user.avatar }}');background-size:cover;background-position:center;{% endif %}">
+        {% if not user.avatar %}{{ (user.full_name or user.username)[0].upper() }}{% endif %}
+      </div>
+      <div style="min-width:0;">
+        <div class="sidebar-name">{{ user.full_name or user.username }}</div>
+        <div class="sidebar-sub"><span class="status-dot"></span>@{{ user.username }}</div>
+      </div>
+    </div>
+
+    <div class="sidebar-nav">
+      <div class="nav-item active" onclick="showSection('overview', this)">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.5-4 4.2-6 7.5-6s6 2 7.5 6"/></svg>
+        {{ T.account_info if T.account_info else 'Overview' }}
+      </div>
+      <div class="nav-item" onclick="showSection('edit', this)">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+        {{ T.account_settings if T.account_settings else 'Edit Profile' }}
+      </div>
+      <div class="nav-item" onclick="showSection('security', this)">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="8" cy="15" r="3.5"/><path d="M10.5 12.5 20 3M16.5 6.5 19 9M13 10l2.5 2.5"/></svg>
+        {{ T.privacy_security if T.privacy_security else 'Security' }}
+      </div>
+      <div class="nav-item" onclick="showSection('preferences', this)">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.56V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 8.96 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.56-1.04H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 8.96a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1.04-1.56V3a2 2 0 1 1 4 0v.09A1.7 1.7 0 0 0 15.04 4.6a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V9a1.7 1.7 0 0 0 1.56 1.04H21a2 2 0 1 1 0 4h-.09A1.7 1.7 0 0 0 19.4 15Z"/></svg>
+        {{ T.theme_settings if T.theme_settings else 'Preferences' }}
+      </div>
+      <div class="nav-item" onclick="showSection('notifications', this)">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        {{ T.notification_settings if T.notification_settings else 'Notifications' }}
+      </div>
+      <div class="nav-item" onclick="showSection('data', this)">
+        <svg class="icon" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.66 3.58 3 8 3s8-1.34 8-3V5"/><path d="M4 12c0 1.66 3.58 3 8 3s8-1.34 8-3"/></svg>
+        {{ T.storage_data if T.storage_data else 'Data' }}
+      </div>
+      <div class="nav-item" onclick="showSection('help', this)">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.67-2.5 2-2.5 3.5"/><path d="M12 17h.01"/></svg>
+        {{ T.help_feedback if T.help_feedback else 'Help & Feedback' }}
+      </div>
+      <div class="nav-item" onclick="showSection('invite', this)">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M16 3.5a4 4 0 1 1 0 5.6M8 20.5a4 4 0 1 1 0-5.6M8 9.5l8-3M8 14.5l8 3"/><circle cx="18" cy="6" r="2.3"/><circle cx="6" cy="12" r="2.3"/><circle cx="18" cy="18" r="2.3"/></svg>
+        {{ T.invite_friend if T.invite_friend else 'Invite a Friend' }}
+      </div>
+      <div class="nav-item" onclick="showSection('updates', this)">
+        <svg class="icon" viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M11 18h2"/></svg>
+        {{ T.app_updates if T.app_updates else 'App Updates' }}
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <a href="{{ url_for('logout') }}" class="nav-item">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+        {{ T.logout if T.logout else 'Logout' }}
+      </a>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content-pane">
+    <div class="content-inner">
+
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for msg in messages %}
+            {% set p = msg.split('|') %}
+            <div class="flash {{ p[0] }}">{{ '✅' if p[0]=='success' else '❌' }} {{ p[1] }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <!-- OVERVIEW -->
+      <div id="overview" class="section active">
+        <div class="section-head">
+          <div class="section-title">{{ T.account_info if T.account_info else 'Overview' }}</div>
+          <div class="section-desc">{{ T.settings_subtitle if T.settings_subtitle else 'A summary of your account' }}</div>
+        </div>
+
+        <div class="panel">
+          <div class="info-list">
+            <div class="info-row">
+              <span class="info-label"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.5-4 4.2-6 7.5-6s6 2 7.5 6"/></svg>{{ T.full_name if T.full_name else 'Full Name' }}</span>
+              <span class="info-value">{{ user.full_name or user.username }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 15.5A3.5 3.5 0 1 1 15.5 8.5c0 2 0 5 2 5s2-2.5 2-4a7.5 7.5 0 1 0-2.6 5.7"/></svg>{{ T.username if T.username else 'Username' }}</span>
+              <span class="info-value">@{{ user.username }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>{{ T.email if T.email else 'Email Address' }}</span>
+              <span class="info-value">{{ user.email or 'Not set' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9.5h18M8 3v3M16 3v3"/></svg>{{ T.account_created if T.account_created else 'Account Created' }}</span>
+              <span class="info-value">{{ user.created_at or 'Unknown' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>{{ T.last_updated if T.last_updated else 'Last Updated' }}</span>
+              <span class="info-value">{{ user.updated_at or 'Never' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3l7 3.5v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9v-5z"/></svg>{{ T.account_status if T.account_status else 'Account Status' }}</span>
+              <span class="info-value ok"><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>{{ T.active if T.active else 'Active' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18.4 8.6 12 15l-3.5-3.5L4 16"/></svg>
+            {{ T.activity_summary if T.activity_summary else 'Account Activity' }}
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.9rem;">
+            <div class="data-card" style="margin-bottom:0;">
+              <div class="data-card-title">{{ T.member_for if T.member_for else 'Member For' }}</div>
+              <div class="data-card-value">{{ member_days }} {{ T.days if T.days else 'days' }}</div>
+            </div>
+            <div class="data-card" style="margin-bottom:0;">
+              <div class="data-card-title">{{ T.total_items_added if T.total_items_added else 'Total Items Added' }}</div>
+              <div class="data-card-value">{{ total_items_added }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EDIT PROFILE -->
+      <div id="edit" class="section">
+        <div class="section-head">
+          <div class="section-title">{{ T.account_settings if T.account_settings else 'Edit Profile' }}</div>
+          <div class="section-desc">{{ T.settings_subtitle if T.settings_subtitle else 'Update your personal information' }}</div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">{{ T.profile_picture if T.profile_picture else 'Profile Picture' }}</div>
+          <div style="display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;">
+            <div style="width:72px;height:72px;border-radius:50%;flex-shrink:0;
+                        background:{% if user.avatar %}url('{{ user.avatar }}') center/cover{% else %}linear-gradient(135deg,var(--digital-lavender),var(--violet)){% endif %};
+                        display:flex;align-items:center;justify-content:center;font-size:1.7rem;font-weight:700;color:#fff;">
+              {% if not user.avatar %}{{ (user.full_name or user.username)[0].upper() }}{% endif %}
+            </div>
+            <div style="flex:1;min-width:200px;">
+              <form method="POST" action="{{ url_for('upload_avatar') }}" enctype="multipart/form-data" id="avatarForm">
+                <input type="hidden" name="tab" value="edit">
+                <input type="file" name="avatar" id="avatarInput" accept="image/png,image/jpeg,image/gif,image/webp" style="display:none;" onchange="document.getElementById('avatarForm').submit();">
+                <div class="action-row" style="margin:0;">
+                  <button type="button" class="btn btn-ghost" onclick="document.getElementById('avatarInput').click();">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
+                    {{ T.upload_photo if T.upload_photo else 'Upload Photo' }}
+                  </button>
+                </div>
+              </form>
+              {% if user.avatar %}
+              <form method="POST" action="{{ url_for('remove_avatar') }}" style="margin-top:0.6rem;">
+                <input type="hidden" name="tab" value="edit">
+                <button type="submit" class="btn btn-ghost" style="color:var(--danger);">{{ T.remove_photo if T.remove_photo else 'Remove Photo' }}</button>
+              </form>
+              {% endif %}
+              <p class="form-help">{{ T.avatar_help if T.avatar_help else 'PNG, JPG, GIF or WEBP. Max 2MB.' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <form method="POST" action="{{ url_for('update_profile') }}">
+            <input type="hidden" name="tab" value="edit">
+            <div class="form-group">
+              <label class="form-label">{{ T.full_name if T.full_name else 'Full Name' }}</label>
+              <input class="form-input" type="text" name="full_name" value="{{ user.full_name or '' }}"
+                     placeholder="{{ T.enter_full_name if T.enter_full_name else 'Enter your full name' }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">{{ T.username if T.username else 'Username' }}</label>
+              <input class="form-input" type="text" name="username" value="{{ user.username }}" readonly>
+              <p class="form-help">{{ T.username_cannot_change if T.username_cannot_change else 'Username cannot be changed' }}</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label">{{ T.email if T.email else 'Email Address' }}</label>
+              <input class="form-input" type="email" id="email" name="email" value="{{ user.email or '' }}"
+                     placeholder="{{ T.enter_email if T.enter_email else 'Enter your email' }}">
+            </div>
+            <button class="btn btn-primary btn-full" type="submit">{{ T.update_profile if T.update_profile else 'Save Changes' }}</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- SECURITY -->
+      <div id="security" class="section">
+        <div class="section-head">
+          <div class="section-title">{{ T.privacy_security if T.privacy_security else 'Security' }}</div>
+          <div class="section-desc">{{ T.change_password_desc if T.change_password_desc else 'Update your password to keep your account secure' }}</div>
+        </div>
+        <div class="panel">
+          <form method="POST" action="{{ url_for('change_password') }}">
+            <input type="hidden" name="tab" value="security">
+            <div class="form-group">
+              <label class="form-label">{{ T.current_password if T.current_password else 'Current Password' }}</label>
+              <input class="form-input" type="password" name="current_password" required
+                     placeholder="{{ T.enter_current_password if T.enter_current_password else 'Enter current password' }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">{{ T.new_password if T.new_password else 'New Password' }}</label>
+              <input class="form-input" type="password" name="new_password" required
+                     placeholder="{{ T.enter_new_password if T.enter_new_password else 'Enter new password' }}">
+              <p class="form-help">{{ T.password_requirements if T.password_requirements else 'At least 8 characters, with uppercase, lowercase & a number' }}</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label">{{ T.confirm_new_password if T.confirm_new_password else 'Confirm New Password' }}</label>
+              <input class="form-input" type="password" name="confirm_password" required
+                     placeholder="{{ T.reenter_new_password if T.reenter_new_password else 'Re-enter new password' }}">
+            </div>
+            <button class="btn btn-primary btn-full" type="submit">{{ T.update_password if T.update_password else 'Update Password' }}</button>
+          </form>
+        </div>
+
+        <div class="panel" style="border-color:var(--danger);">
+          <div class="panel-title" style="color:var(--danger);">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4M12 17h.01"/></svg>
+            {{ T.danger_zone if T.danger_zone else 'Danger Zone' }}
+          </div>
+          <p class="form-help" style="margin-bottom:1rem;">{{ T.delete_account_desc if T.delete_account_desc else 'Permanently delete your account and all associated data. This cannot be undone.' }}</p>
+          <form method="POST" action="{{ url_for('delete_account') }}"
+                onsubmit="return confirm('{{ T.delete_account_confirm if T.delete_account_confirm else 'Are you absolutely sure? This will permanently delete your account and cannot be reversed.' }}');">
+            <input type="hidden" name="tab" value="security">
+            <div class="form-group">
+              <label class="form-label">{{ T.confirm_with_password if T.confirm_with_password else 'Confirm with your password' }}</label>
+              <input class="form-input" type="password" name="confirm_password" required
+                     placeholder="{{ T.enter_current_password if T.enter_current_password else 'Enter your password' }}">
+            </div>
+            <button class="btn btn-danger btn-full" type="submit">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+              {{ T.delete_account if T.delete_account else 'Delete Account' }}
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- PREFERENCES -->
+      <div id="preferences" class="section">
+        <div class="section-head">
+          <div class="section-title">{{ T.theme_settings if T.theme_settings else 'Preferences' }}</div>
+          <div class="section-desc">{{ T.settings_subtitle if T.settings_subtitle else 'Personalize how the app looks and notifies you' }}</div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">{{ T.theme_description if T.theme_description else 'Appearance' }}</div>
+          <form method="POST" action="{{ url_for('update_theme') }}">
+            <input type="hidden" name="tab" value="preferences">
+            <div class="pick-row">
+              <div class="pick-opt {% if session.get('theme') == 'light' %}selected{% endif %}" onclick="selectPick(this,'theme','light')">
+                <div class="pick-icon">☀️</div>
+                <div class="pick-name">{{ T.light_theme if T.light_theme else 'Light' }}</div>
+              </div>
+              <div class="pick-opt {% if session.get('theme','dark') == 'dark' %}selected{% endif %}" onclick="selectPick(this,'theme','dark')">
+                <div class="pick-icon">🌙</div>
+                <div class="pick-name">{{ T.dark_theme if T.dark_theme else 'Dark' }}</div>
+              </div>
+            </div>
+            <input type="hidden" name="theme" id="selectedtheme" value="{{ session.get('theme', 'dark') }}">
+            <button class="btn btn-ghost btn-full" type="submit">{{ T.save_btn if T.save_btn else 'Save Appearance' }}</button>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">{{ T.language_description if T.language_description else 'Language' }}</div>
+          <form method="POST" action="{{ url_for('update_language') }}">
+            <input type="hidden" name="tab" value="preferences">
+            <div class="pick-row">
+              <div class="pick-opt {% if lang == 'en' %}selected{% endif %}" onclick="selectPick(this,'language','en')">
+                <div class="pick-icon">🇬🇧</div>
+                <div class="pick-name">{{ T.english if T.english else 'English' }}</div>
+              </div>
+              <div class="pick-opt {% if lang == 'hi' %}selected{% endif %}" onclick="selectPick(this,'language','hi')">
+                <div class="pick-icon">🇮🇳</div>
+                <div class="pick-name">{{ T.hindi if T.hindi else 'Hindi' }}</div>
+              </div>
+            </div>
+            <input type="hidden" name="language" id="selectedlanguage" value="{{ lang }}">
+            <button class="btn btn-ghost btn-full" type="submit">{{ T.save_btn if T.save_btn else 'Save Language' }}</button>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+            {{ T.regional_settings if T.regional_settings else 'Timezone & Date Format' }}
+          </div>
+          <form method="POST" action="{{ url_for('update_regional') }}">
+            <input type="hidden" name="tab" value="preferences">
+            <div class="form-group">
+              <label class="form-label">{{ T.timezone if T.timezone else 'Timezone' }}</label>
+              <select class="form-input" name="timezone">
+                {% set tz = user.timezone or 'Asia/Kolkata' %}
+                <option value="Asia/Kolkata" {% if tz=='Asia/Kolkata' %}selected{% endif %}>India Standard Time (IST)</option>
+                <option value="Asia/Dubai" {% if tz=='Asia/Dubai' %}selected{% endif %}>Gulf Standard Time (GST)</option>
+                <option value="Asia/Dhaka" {% if tz=='Asia/Dhaka' %}selected{% endif %}>Bangladesh Standard Time</option>
+                <option value="Asia/Kathmandu" {% if tz=='Asia/Kathmandu' %}selected{% endif %}>Nepal Time</option>
+                <option value="Europe/London" {% if tz=='Europe/London' %}selected{% endif %}>UK Time (GMT/BST)</option>
+                <option value="America/New_York" {% if tz=='America/New_York' %}selected{% endif %}>US Eastern Time</option>
+                <option value="America/Los_Angeles" {% if tz=='America/Los_Angeles' %}selected{% endif %}>US Pacific Time</option>
+                <option value="Australia/Sydney" {% if tz=='Australia/Sydney' %}selected{% endif %}>Australia Eastern Time</option>
+                <option value="UTC" {% if tz=='UTC' %}selected{% endif %}>UTC</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">{{ T.date_format if T.date_format else 'Date Format' }}</label>
+              <select class="form-input" name="date_format">
+                {% set df = user.date_format or 'DD/MM/YYYY' %}
+                <option value="DD/MM/YYYY" {% if df=='DD/MM/YYYY' %}selected{% endif %}>DD/MM/YYYY (05/07/2026)</option>
+                <option value="MM/DD/YYYY" {% if df=='MM/DD/YYYY' %}selected{% endif %}>MM/DD/YYYY (07/05/2026)</option>
+                <option value="YYYY-MM-DD" {% if df=='YYYY-MM-DD' %}selected{% endif %}>YYYY-MM-DD (2026-07-05)</option>
+              </select>
+              <p class="form-help">{{ T.date_format_help if T.date_format_help else 'Used for displaying expiry and purchase dates' }}</p>
+            </div>
+            <button class="btn btn-ghost btn-full" type="submit">{{ T.save_btn if T.save_btn else 'Save Regional Settings' }}</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- NOTIFICATIONS -->
+      <div id="notifications" class="section">
+        <div class="section-head">
+          <div class="section-title">{{ T.notification_settings if T.notification_settings else 'Notifications' }}</div>
+          <div class="section-desc">{{ T.settings_subtitle if T.settings_subtitle else 'Choose what you want to be notified about' }}</div>
+        </div>
+        <div class="panel">
+          <form method="POST" action="{{ url_for('update_notifications') }}">
+            <input type="hidden" name="tab" value="notifications">
+            <div class="toggle-row">
+              <div><div class="toggle-title">{{ T.expiry_alerts if T.expiry_alerts else 'Expiry Alerts' }}</div>
+                <div class="toggle-desc">{{ T.expiry_alerts_desc if T.expiry_alerts_desc else 'Get notified when items are about to expire' }}</div></div>
+              <div class="toggle-switch {% if session.get('expiry_alerts', True) %}active{% endif %}" onclick="toggleSwitch(this)">
+                <input type="checkbox" name="expiry_alerts" {% if session.get('expiry_alerts', True) %}checked{% endif %} style="display:none;">
+              </div>
+            </div>
+            <div class="toggle-row">
+              <div><div class="toggle-title">{{ T.daily_reminders if T.daily_reminders else 'Daily Reminders' }}</div>
+                <div class="toggle-desc">{{ T.daily_reminders_desc if T.daily_reminders_desc else 'Receive daily summary of expiring items' }}</div></div>
+              <div class="toggle-switch {% if session.get('daily_reminders', False) %}active{% endif %}" onclick="toggleSwitch(this)">
+                <input type="checkbox" name="daily_reminders" {% if session.get('daily_reminders', False) %}checked{% endif %} style="display:none;">
+              </div>
+            </div>
+            <div class="toggle-row">
+              <div><div class="toggle-title">{{ T.email_notifications if T.email_notifications else 'Email Notifications' }}</div>
+                <div class="toggle-desc">{{ T.email_notifications_desc if T.email_notifications_desc else 'Receive notifications via email' }}</div></div>
+              <div class="toggle-switch {% if session.get('email_notifications', False) %}active{% endif %}" onclick="toggleSwitch(this)">
+                <input type="checkbox" name="email_notifications" {% if session.get('email_notifications', False) %}checked{% endif %} style="display:none;">
+              </div>
+            </div>
+            <button class="btn btn-primary btn-full" type="submit" style="margin-top:0.8rem;">{{ T.save_btn if T.save_btn else 'Save Preferences' }}</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- DATA -->
+      <div id="data" class="section">
+        <div class="section-head">
+          <div class="section-title">{{ T.storage_data if T.storage_data else 'Storage & Data' }}</div>
+          <div class="section-desc">{{ T.settings_subtitle if T.settings_subtitle else 'Manage what Predicta Shelf stores for you' }}</div>
+        </div>
+
+        <div class="panel">
+          <div class="data-card">
+            <div class="data-card-title">{{ T.total_products_stored if T.total_products_stored else 'Total Products Stored' }}</div>
+            <div class="data-card-value">{{ products_count or 0 }}</div>
+            <div class="data-card-desc">{{ T.data_storage_info if T.data_storage_info else 'Your data is securely stored in the database' }}</div>
+          </div>
+          <a href="{{ url_for('export_data') }}" class="btn btn-ghost btn-full">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+            {{ T.export_data if T.export_data else 'Export Data' }}
+          </a>
+        </div>
+
+        <div class="panel">
+          <form method="POST" action="{{ url_for('clear_data') }}" onsubmit="return confirm('{{ T.clear_data_desc if T.clear_data_desc else 'This will permanently delete all your data. Continue?' }}');">
+            <input type="hidden" name="tab" value="data">
+            <div class="data-card danger-card">
+              <div class="data-card-title" style="color:var(--danger);">{{ T.clear_data if T.clear_data else 'Clear All Data' }}</div>
+              <div class="data-card-desc">{{ T.clear_data_desc if T.clear_data_desc else 'Permanently delete all your products. This cannot be undone.' }}</div>
+            </div>
+            <button class="btn btn-danger btn-full" type="submit">{{ T.clear_data if T.clear_data else 'Clear All Data' }}</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- HELP & FEEDBACK -->
+      <div id="help" class="section">
+        <div class="section-head">
+          <div class="section-title">{{ T.help_feedback if T.help_feedback else 'Help & Feedback' }}</div>
+          <div class="section-desc">{{ T.help_description if T.help_description else 'Contact us for help and support' }}</div>
+        </div>
+
+        <div class="panel">
+          <div class="data-card">
+            <div class="data-card-title">{{ T.help_support if T.help_support else 'Help & Support' }}</div>
+            <div class="data-card-desc">{{ T.help_description if T.help_description else 'Contact us for help and support' }}</div>
+            <div style="margin-top:0.7rem;font-family:monospace;color:var(--digital-lavender);font-size:0.85rem;">{{ T.help_email if T.help_email else 'help@predictashelf.com' }}</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">{{ T.rate_app if T.rate_app else 'Rate the App' }}</div>
+          <form method="POST" action="{{ url_for('submit_feedback') }}">
+            <input type="hidden" name="tab" value="help">
+            <div class="form-group">
+              <div style="display:flex;gap:0.4rem;margin-bottom:0.3rem;">
+                <span class="star" onclick="setRating(1,this)">⭐</span>
+                <span class="star" onclick="setRating(2,this)">⭐</span>
+                <span class="star" onclick="setRating(3,this)">⭐</span>
+                <span class="star" onclick="setRating(4,this)">⭐</span>
+                <span class="star active" onclick="setRating(5,this)">⭐</span>
+              </div>
+              <input type="hidden" name="rating" id="ratingValue" value="5">
+            </div>
+            <div class="form-group">
+              <label class="form-label">{{ T.your_feedback if T.your_feedback else 'Your Feedback' }}</label>
+              <textarea class="form-input" name="feedback" rows="4" style="resize:vertical;"
+                placeholder="{{ T.feedback_description if T.feedback_description else 'We would love to hear your thoughts' }}"></textarea>
+            </div>
+            <button class="btn btn-primary btn-full" type="submit">{{ T.send_feedback if T.send_feedback else 'Send Feedback' }}</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- INVITE A FRIEND -->
+      <div id="invite" class="section">
+        <div class="section-head">
+          <div class="section-title">{{ T.invite_friend if T.invite_friend else 'Invite a Friend' }}</div>
+          <div class="section-desc">{{ T.invite_friend_desc if T.invite_friend_desc else 'Share Predicta Shelf with your friends' }}</div>
+        </div>
+        <div class="panel">
+          <div class="data-card" style="display:flex;align-items:center;gap:0.6rem;font-family:monospace;font-size:0.82rem;color:var(--muted);word-break:break-all;">
+            <svg class="icon" viewBox="0 0 24 24" style="flex-shrink:0;"><path d="M10 13a5 5 0 0 0 7.07 0l1.93-1.93a5 5 0 0 0-7.07-7.07L10.5 5.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-1.93 1.93a5 5 0 0 0 7.07 7.07L13.5 18.5"/></svg>
+            <span id="inviteUrl">https://predictashelf.com/signup?ref={{ user.username }}</span>
+          </div>
+          <div class="action-row" style="margin-top:1rem;">
+            <button class="btn btn-primary" onclick="copyInviteLink()">
+              <svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+              {{ T.copy_link if T.copy_link else 'Copy Link' }}
+            </button>
+            <a href="mailto:?subject=Join Predicta Shelf&body=Check out Predicta Shelf - Smart Expiry Tracker! https://predictashelf.com/signup?ref={{ user.username }}" class="btn btn-ghost">
+              <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+              {{ T.share_via_email if T.share_via_email else 'Share via Email' }}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- APP UPDATES -->
+      <div id="updates" class="section">
+        <div class="section-head">
+          <div class="section-title">{{ T.app_updates if T.app_updates else 'App Updates' }}</div>
+          <div class="section-desc">{{ T.update_history if T.update_history else 'Update history and version info' }}</div>
+        </div>
+        <div class="panel">
+          <div class="data-card">
+            <div class="data-card-title">{{ T.current_version if T.current_version else 'Current Version' }}</div>
+            <div class="data-card-value">1.1</div>
+          </div>
+          <div class="data-card">
+            <div class="data-card-title" style="color:var(--text);">{{ T.version_1_1 if T.version_1_1 else 'Version 1.1 — Added Settings Page' }}</div>
+            <div class="data-card-desc">January 2025</div>
+          </div>
+          <div class="data-card">
+            <div class="data-card-title" style="color:var(--text);">{{ T.version_1_0 if T.version_1_0 else 'Version 1.0 — Initial Release' }}</div>
+            <div class="data-card-desc">December 2024</div>
+          </div>
+          <div class="data-card" style="border-color:var(--success);">
+            <div class="data-card-title" style="color:var(--success);">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+              {{ T.up_to_date if T.up_to_date else 'You are using the latest version' }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function showSection(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (el && el.classList.contains('nav-item')) el.classList.add('active');
+  document.querySelector('.content-pane').scrollTop = 0;
+}
+function selectPick(el, groupField, value) {
+  el.parentElement.querySelectorAll('.pick-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('selected' + groupField).value = value;
+}
+function toggleSwitch(el) {
+  el.classList.toggle('active');
+  const checkbox = el.querySelector('input[type="checkbox"]');
+  checkbox.checked = !checkbox.checked;
+}
+
+// Restore the tab the user was on after a form submit/redirect
+(function () {
+  const params = new URLSearchParams(window.location.search);
+  const tab = params.get('tab');
+  if (tab && document.getElementById(tab)) {
+    const navEl = document.querySelector(`.nav-item[onclick*="showSection('${tab}'"]`);
+    showSection(tab, navEl);
+  }
+})();
+function setRating(rating, el) {
+  const stars = el.parentElement.querySelectorAll('.star');
+  stars.forEach((star, index) => {
+    star.classList.toggle('active', index < rating);
+  });
+  document.getElementById('ratingValue').value = rating;
+}
+function copyInviteLink() {
+  const inviteUrl = document.getElementById('inviteUrl').textContent;
+  navigator.clipboard.writeText(inviteUrl).then(() => {
+    alert('{{ T.link_copied if T.link_copied else "Link copied to clipboard!" }}');
+  });
+}
+</script>
+</body>
+</html>

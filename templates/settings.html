@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>{{ T.settings_title if T.settings_title else 'Settings' }} - {{ T.app_name }}</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=DM+Sans:wght@300;400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600&family=Noto+Sans+Gujarati:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#1a1a2e;--surface:#16213e;--card:#1e3a5f;--border:#3d5a80;
+  --digital-lavender:#FF6B6B;--neon-cyan:#FFD93D;--punchy-coral:#FF8E53;--violet:#FFB84D;
+  --text:#ffffff;--muted:#a8dadc;
+  --success:#4CC9F0;--warning:#FFD93D;--danger:#FF6B6B;
+  --font-serif:'Inter','Segoe UI',system-ui,sans-serif;
+  --font:'Inter','Segoe UI',system-ui,sans-serif;
+  --shadow:0 4px 20px rgba(0,0,0,0.3);--shadow-lg:0 12px 48px rgba(0,0,0,0.4);
+  --glow-lavender:0 0 10px rgba(255,107,107,0.2);
+  --glow-cyan:0 0 10px rgba(255,217,61,0.2);
+  --glow-coral:0 0 10px rgba(255,142,83,0.2);
+}
+
+/* Light Theme - Premium Minimal */
+body[data-theme="light"]{
+  --bg:#F5F0E8;--surface:#FFFDF8;--card:#FFFFFF;--border:#E2D9C8;
+  --digital-lavender:#B8860B;--neon-cyan:#D4760A;--punchy-coral:#D4760A;--violet:#9370DB;
+  --gold:#B8860B;--gold-dark:#8B6508;
+  --text:#2C2416;--muted:#7A6E60;
+  --success:#2E7D32;--warning:#E65100;--danger:#C62828;
+  --shadow:0 2px 8px rgba(44,36,22,0.10);--shadow-lg:0 6px 20px rgba(44,36,22,0.14);
+  --glow-lavender:0 0 10px rgba(184,134,11,0.18);
+  --glow-cyan:0 0 10px rgba(212,118,10,0.18);
+  --glow-coral:0 0 10px rgba(212,118,10,0.18);
+}
+
+/* Dark Theme */
+body[data-theme="dark"]{
+  --bg:#1a1a2e;--surface:#16213e;--card:#1e3a5f;--border:#3d5a80;
+  --digital-lavender:#FF6B6B;--neon-cyan:#FFD93D;--punchy-coral:#FF8E53;--violet:#FFB84D;
+  --text:#ffffff;--muted:#a8dadc;
+  --success:#4CC9F0;--warning:#FFD93D;--danger:#FF6B6B;
+  --shadow:0 4px 20px rgba(0,0,0,0.3);--shadow-lg:0 12px 48px rgba(0,0,0,0.4);
+  --glow-lavender:0 0 10px rgba(255,107,107,0.2);
+  --glow-cyan:0 0 10px rgba(255,217,61,0.2);
+  --glow-coral:0 0 10px rgba(255,142,83,0.2);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;
+  background:radial-gradient(circle at 20% 50%, var(--digital-lavender) 0%, transparent 50%),
+             radial-gradient(circle at 80% 80%, var(--neon-cyan) 0%, transparent 50%),
+             radial-gradient(circle at 40% 20%, var(--violet) 0%, transparent 50%);
+  opacity:0.1;pointer-events:none;z-index:0;}
+
+/* ── TOPBAR ── */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(26,26,46,0.95);
+  backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+  padding:0.8rem 1.8rem;display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 4px 24px rgba(0,0,0,0.3);gap:1rem;}
+
+body[data-theme="light"] .topbar{
+  background:var(--card);
+  box-shadow:var(--shadow);
+}
+.logo{display:flex;align-items:center;gap:0.55rem;flex-shrink:0;}
+.logo-mark{width:32px;height:32px;border-radius:10px;
+  background:linear-gradient(135deg,var(--digital-lavender),var(--violet));
+  display:flex;align-items:center;justify-content:center;font-size:0.95rem;
+  box-shadow:var(--glow-lavender);animation:pulse 2s infinite;}
+.logo h1{font-family:var(--font-serif);font-size:1.15rem;font-weight:700;}
+.logo h1 em{color:var(--digital-lavender);font-style:italic;}
+.topbar-right{display:flex;align-items:center;gap:0.6rem;}
+
+/* ── NAVIGATION ── */
+.nav-links{display:flex;align-items:center;gap:0.4rem;}
+.nav-link{display:flex;align-items:center;gap:0.3rem;padding:0.4rem 0.75rem;
+  font-family:var(--font);font-size:0.78rem;font-weight:500;
+  color:var(--muted);text-decoration:none;border-radius:8px;
+  transition:all 0.2s;box-shadow:var(--shadow);}
+.nav-link:hover{color:var(--text);background:var(--card);}
+.nav-link.active{background:linear-gradient(135deg,var(--digital-lavender),var(--violet));color:#fff;}
+
+/* ── SETTINGS PAGE ── */
+.main{max-width:1180px;margin:0 auto;padding:1.6rem 1.5rem;position:relative;z-index:1;}
+.settings-header{margin-bottom:2rem;}
+.settings-title{font-family:var(--font-serif);font-size:2rem;font-weight:700;margin-bottom:0.5rem;color:var(--text);}
+.settings-subtitle{color:var(--muted);font-size:1rem;}
+
+.settings-grid{display:flex;flex-direction:row;gap:1.5rem;align-items:stretch;width:100%;}
+
+/* Sidebar Navigation */
+.settings-nav{background:linear-gradient(135deg,var(--surface),rgba(167,139,250,0.08));border:1px solid var(--border);border-radius:24px;
+  padding:1.5rem;box-shadow:var(--shadow-lg);position:sticky;top:1rem;flex:0 0 260px;min-width:260px;}
+.nav-item{display:flex;align-items:center;gap:0.8rem;padding:0.9rem 1rem;
+  font-family:var(--font);font-size:0.9rem;font-weight:500;
+  color:var(--muted);text-decoration:none;border-radius:12px;
+  transition:all 0.2s;margin-bottom:0.5rem;cursor:pointer;}
+.nav-item:hover{color:var(--text);background:var(--card);transform:translateX(4px);}
+.nav-item.active{background:linear-gradient(135deg,var(--digital-lavender),var(--violet));color:#fff;font-weight:600;}
+.nav-icon{font-size:1.1rem;}
+
+/* Content Sections */
+.settings-content{display:flex;flex-direction:column;gap:1.5rem;flex:1 1 0;min-width:0;}
+.settings-section{background:linear-gradient(135deg,var(--surface),rgba(167,139,250,0.08));border:1px solid var(--border);border-radius:24px;
+  padding:2rem;box-shadow:var(--shadow-lg);display:none;flex:1 1 auto;}
+.settings-section.active{display:block;}
+.settings-section:hover{transform:translateY(-2px);box-shadow:0 16px 48px rgba(167,139,250,0.15);}
+
+.section-header{display:flex;align-items:center;gap:0.8rem;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);}
+.section-title{font-family:var(--font-serif);font-size:1.3rem;font-weight:700;color:var(--text);}
+.section-icon{font-size:1.5rem;}
+
+/* Form Elements */
+.form-group{margin-bottom:1.5rem;}
+.form-label{display:block;font-size:0.85rem;font-weight:600;color:var(--text);margin-bottom:0.5rem;}
+.form-input{width:100%;padding:0.8rem 1rem;font-family:var(--font);font-size:0.95rem;
+  background:linear-gradient(135deg,var(--card),rgba(0,229,255,0.02));border:1px solid var(--border);border-radius:12px;
+  color:var(--text);transition:all 0.3s;}
+.form-input:focus{outline:none;border-color:var(--digital-lavender);box-shadow:var(--glow-lavender);transform:translateY(-1px);}
+.form-textarea{width:100%;padding:0.8rem 1rem;font-family:var(--font);font-size:0.95rem;
+  background:linear-gradient(135deg,var(--card),rgba(0,229,255,0.02));border:1px solid var(--border);border-radius:12px;
+  color:var(--text);transition:all 0.3s;min-height:120px;resize:vertical;}
+.form-textarea:focus{outline:none;border-color:var(--digital-lavender);box-shadow:var(--glow-lavender);transform:translateY(-1px);}
+.form-help{font-size:0.8rem;color:var(--muted);margin-top:0.4rem;font-style:italic;}
+
+/* Toggle Switch */
+.toggle-container{display:flex;align-items:center;justify-content:space-between;padding:1rem 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+.toggle-container:last-child{border-bottom:none;}
+.toggle-label{flex:1;}
+.toggle-title{font-size:0.95rem;font-weight:600;color:var(--text);margin-bottom:0.2rem;}
+.toggle-desc{font-size:0.8rem;color:var(--muted);}
+.toggle-switch{position:relative;width:50px;height:26px;background:var(--card);border:1px solid var(--border);border-radius:13px;cursor:pointer;transition:all 0.3s;}
+.toggle-switch.active{background:linear-gradient(135deg,var(--digital-lavender),var(--violet));border-color:var(--digital-lavender);}
+.toggle-switch::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:all 0.3s;}
+.toggle-switch.active::after{left:27px;}
+
+/* Theme Options */
+.theme-options{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+.theme-option{padding:1.5rem;border:2px solid var(--border);border-radius:16px;cursor:pointer;transition:all 0.3s;text-align:center;background:var(--card);}
+.theme-option:hover{border-color:var(--digital-lavender);transform:translate translateY(-2px);}
+.theme-option.selected{border-color:var(--digital-lavender);background:linear-gradient(135deg,var(--card),rgba(167,139,250,0.1));}
+.theme-icon{font-size:2rem;margin-bottom:0.5rem;}
+.theme-name{font-weight:600;color:var(--text);}
+
+/* Language Options */
+.language-options{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+.language-option{padding:1.5rem;border:2px solid var(--border);border-radius:16px;cursor:pointer;transition:all 0.3s;text-align:center;background:var(--card);}
+.language-option:hover{border-color:var(--digital-lavender);transform:translate translateY(-2px);}
+.language-option.selected{border-color:var(--digital-lavender);background:linear-gradient(135deg,var(--card),rgba(167,139,250,0.1));}
+.language-flag{font-size:2rem;margin-bottom:0.5rem;}
+.language-name{font-weight:600;color:var(--text);}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:0.6rem;padding:0.8rem 1.5rem;
+  font-family:var(--font);font-size:0.9rem;font-weight:600;border-radius:12px;
+  text-decoration:none;cursor:pointer;transition:all 0.3s;border:none;}
+.btn-primary{background:linear-gradient(135deg,var(--digital-lavender),var(--violet));color:#fff;box-shadow:var(--glow-lavender);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg),0 0 25px rgba(167,139,250,0.4);}
+.btn-danger{background:linear-gradient(135deg,var(--punchy-coral),#ef4444);color:#fff;}
+.btn-danger:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg),0 0 25px rgba(255,107,107,0.4);}
+.btn-success{background:linear-gradient(135deg,var(--success),#10b981);color:#fff;}
+.btn-success:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg),0 0 25px rgba(16,185,129,0.4);}
+.btn-full{width:100%;justify-content:center;}
+.btn-group{display:flex;gap:0.8rem;margin-top:1rem;}
+
+/* Data Cards */
+.data-card{background:linear-gradient(135deg,var(--card),rgba(0,229,255,0.08));border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+.data-card-title{font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.5rem;display:flex;align-items:center;gap:0.5rem;}
+.data-card-value{font-size:1.5rem;font-weight:700;color:var(--digital-lavender);}
+.data-card-desc{font-size:0.8rem;color:var(--muted);margin-top:0.5rem;}
+
+/* Account Info */
+.info-row{display:flex;justify-content:space-between;align-items:center;font-size:0.9rem;}
+.info-label{color:var(--muted);font-weight:500;}
+.info-value{color:var(--text);font-weight:600;}
+
+/* Rating Stars */
+.rating-stars{display:flex;gap:0.5rem;margin-bottom:1rem;}
+.star{font-size:2rem;cursor:pointer;transition:all 0.2s;color:var(--border);}
+.star:hover,star.active{color:var(--warning);transform:scale(1.1);}
+
+/* Update History */
+.update-item{padding:1rem;background:var(--card);border-radius:12px;margin-bottom:0.8rem;border:1px solid var(--border);}
+.update-version{font-weight:600;color:var(--digital-lavender);margin-bottom:0.3rem;}
+.update-desc{font-size:0.85rem;color:var(--muted);}
+
+/* Invite Section */
+.invite-box{background:linear-gradient(135deg,var(--card),rgba(0,229,255,0.08));border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1rem;}
+.invite-link{display:flex;align-items:center;gap:0.8rem;padding:0.8rem;background:var(--bg);border-radius:8px;font-family:monospace;font-size:0.9rem;color:var(--muted);margin-bottom:1rem;}
+
+/* Flash Messages */
+.flash{padding:0.75rem 1rem;border-radius:10px;margin-bottom:1.4rem;
+  font-size:0.83rem;font-weight:500;display:flex;align-items:center;gap:0.5rem;animation:rise 0.4s ease;}
+.flash.success{background:rgba(61,122,79,0.08);color:var(--success);border:1px solid rgba(61,122,79,0.2);}
+.flash.error{background:rgba(179,58,58,0.08);color:var(--danger);border:1px solid rgba(179,58,58,0.2);}
+
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:0.8}}
+
+@media(max-width:900px){
+  .topbar{padding:0.65rem 0.9rem;}
+  .logo h1{font-size:1rem;}
+  .settings-grid{gap:1rem;}
+  .settings-nav{flex:0 0 190px;min-width:190px;padding:1rem 0.75rem;}
+  .nav-item{padding:0.7rem 0.75rem;font-size:0.82rem;}
+  .theme-options,.language-options{grid-template-columns:1fr;}
+  .main{padding:0.9rem 0.75rem;}
+}
+@media(max-width:600px){
+  .settings-grid{flex-direction:column;}
+  .settings-nav{flex:none;width:100%;position:static;display:flex;overflow-x:auto;padding:0.75rem;gap:0.5rem;border-radius:16px;scrollbar-width:none;}
+  .settings-nav::-webkit-scrollbar{display:none;}
+  .nav-item{flex-shrink:0;margin-bottom:0;padding:0.5rem 0.9rem;font-size:0.8rem;border-radius:10px;white-space:nowrap;}
+  .nav-icon{font-size:1rem;}
+  .settings-content{min-width:unset;width:100%;}
+}
+</style>
+</head>
+<body data-theme="{{ session.get('theme', 'dark') }}" class="{{ session.get('theme', 'dark') }}">
+
+<script>
+    // Update theme icon based on current theme
+    document.addEventListener('DOMContentLoaded', function() {
+        updateThemeIcon();
+    });
+
+    function updateThemeIcon() {
+        const currentTheme = document.body.getAttribute('data-theme');
+        const themeIcons = document.querySelectorAll('.theme-icon');
+        
+        // Light Theme = ☀️, Dark Theme = 🌙
+        if (themeIcons.length >= 2) {
+            themeIcons[0].textContent = '☀️';  // Light theme always shows sun
+            themeIcons[1].textContent = '🌙';  // Dark theme always shows moon
+        }
+    }
+
+    // Toggle theme function
+    function toggleTheme() {
+        const currentTheme = document.body.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        // Update body attribute
+        document.body.setAttribute('data-theme', newTheme);
+        document.body.className = newTheme;
+        
+        // Update icon
+        updateThemeIcon();
+        
+        // Update button active state
+        const toggleBtn = document.querySelector('.theme-toggle');
+        if (newTheme === 'dark') {
+            toggleBtn.classList.add('active');
+        } else {
+            toggleBtn.classList.remove('active');
+        }
+        
+        // Save to server
+        fetch('/toggle-theme', {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        }).then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            }
+        }).catch(error => {
+            console.error('Theme toggle failed:', error);
+        });
+    }
+</script>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-mark">🏺</div>
+    <h1>Predicta<em>Shelf</em></h1>
+  </div>
+
+  <div class="topbar-right">
+    <!-- NAVIGATION -->
+    <div class="nav-links">
+      <a href="{{ url_for('index') }}" class="nav-link">
+        🏠 {{ T.home if T.home else 'Home' }}
+      </a>
+      <a href="{{ url_for('profile') }}" class="nav-link">
+        👤 {{ T.profile if T.profile else 'Profile' }}
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for msg in messages %}
+        {% set p = msg.split('|') %}
+        <div class="flash {{ p[0] }}">{{ '✅' if p[0]=='success' else '❌' }} {{ p[1] }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <div class="settings-header">
+    <h1 class="settings-title">{{ T.settings_title if T.settings_title else 'Settings' }}</h1>
+    <p class="settings-subtitle">{{ T.settings_subtitle if T.settings_subtitle else 'Manage your account preferences and app settings' }}</p>
+  </div>
+
+  <div class="settings-grid">
+    <!-- Sidebar Navigation -->
+    <div class="settings-nav">
+      <div class="nav-item active" onclick="showSection('account')">
+        <span class="nav-icon">👤</span>
+        {{ T.account_settings if T.account_settings else 'Account' }}
+      </div>
+      <div class="nav-item" onclick="showSection('security')">
+        <span class="nav-icon">🔒</span>
+        {{ T.privacy_security if T.privacy_security else 'Privacy & Security' }}
+      </div>
+      <div class="nav-item" onclick="showSection('theme')">
+        <span class="nav-icon">🎨</span>
+        {{ T.theme_settings if T.theme_settings else 'Theme' }}
+      </div>
+      <div class="nav-item" onclick="showSection('notifications')">
+        <span class="nav-icon">🔔</span>
+        {{ T.notification_settings if T.notification_settings else 'Notifications' }}
+      </div>
+      <div class="nav-item" onclick="showSection('storage')">
+        <span class="nav-icon">💾</span>
+        {{ T.storage_data if T.storage_data else 'Storage' }}
+      </div>
+      <div class="nav-item" onclick="showSection('language')">
+        <span class="nav-icon">🌐</span>
+        {{ T.language_settings if T.language_settings else 'Language' }}
+      </div>
+      <div class="nav-item" onclick="showSection('help')">
+        <span class="nav-icon">❓</span>
+        {{ T.help_feedback if T.help_feedback else 'Help' }}
+      </div>
+      <div class="nav-item" onclick="showSection('invite')">
+        <span class="nav-icon">📧</span>
+        {{ T.invite_friend if T.invite_friend else 'Invite' }}
+      </div>
+      <div class="nav-item" onclick="showSection('updates')">
+        <span class="nav-icon">📱</span>
+        {{ T.app_updates if T.app_updates else 'Updates' }}
+      </div>
+      <a class="nav-item" href="{{ url_for('logout') }}" style="margin-top:0.5rem;border-top:1px solid var(--border);padding-top:1rem;color:#ff6b6b;">
+        <span class="nav-icon">🚪</span>
+        {{ T.logout if T.logout else 'Logout' }}
+      </a>
+    </div>
+
+    <!-- Content Sections -->
+    <div class="settings-content">
+      <!-- Account Settings -->
+      <div id="account" class="settings-section active">
+        <div class="section-header">
+          <span class="section-icon">👤</span>
+          <h2 class="section-title">{{ T.account_settings if T.account_settings else 'Account Settings' }}</h2>
+        </div>
+        
+        <form method="POST" action="{{ url_for('update_profile') }}">
+          <!-- Full Name -->
+          <div class="form-group">
+            <label class="form-label">{{ T.full_name if T.full_name else 'Full Name' }}</label>
+            <input class="form-input" type="text" name="full_name"
+                   value="{{ user.full_name or '' }}"
+                   placeholder="{{ T.enter_full_name if T.enter_full_name else 'Enter your full name' }}">
+          </div>
+
+          <!-- Username (Read-only) -->
+          <div class="form-group">
+            <label class="form-label">{{ T.username if T.username else 'Username' }}</label>
+            <input class="form-input" type="text" name="username"
+                   value="{{ user.username }}" readonly>
+            <p class="form-help">{{ T.username_cannot_change if T.username_cannot_change else 'Username cannot be changed' }}</p>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label class="form-label">{{ T.email if T.email else 'Email Address' }}</label>
+            <input class="form-input" type="email" name="email"
+                   value="{{ user.email or '' }}"
+                   placeholder="{{ T.enter_email if T.enter_email else 'Enter your email' }}">
+          </div>
+
+          <!-- Account Info Display -->
+          <div class="data-card" style="margin-top:1.5rem;">
+            <div class="data-card-title">
+              ℹ️ {{ T.account_info if T.account_info else 'Account Information' }}
+            </div>
+            <div class="info-row" style="padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+              <span class="info-label">{{ T.account_created if T.account_created else 'Account Created' }}:</span>
+              <span class="info-value">{{ user.created_at or 'Unknown' }}</span>
+            </div>
+            <div class="info-row" style="padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+              <span class="info-label">{{ T.last_updated if T.last_updated else 'Last Updated' }}:</span>
+              <span class="info-value">{{ user.updated_at or 'Never' }}</span>
+            </div>
+            <div class="info-row" style="padding:0.5rem 0;">
+              <span class="info-label">{{ T.account_status if T.account_status else 'Account Status' }}:</span>
+              <span class="info-value" style="color:var(--success);font-weight:600;">
+                ✅ {{ T.active if T.active else 'Active' }}
+              </span>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-full" type="submit" style="margin-top:1.5rem;">
+            💾 {{ T.update_profile if T.update_profile else 'Update Profile' }}
+          </button>
+        </form>
+      </div>
+
+      <!-- Privacy & Security -->
+      <div id="security" class="settings-section">
+        <div class="section-header">
+          <span class="section-icon">🔒</span>
+          <h2 class="section-title">{{ T.privacy_security if T.privacy_security else 'Privacy & Security' }}</h2>
+        </div>
+
+        <p style="color:var(--muted);margin-bottom:1.5rem;">{{ T.change_password_desc if T.change_password_desc else 'Update your password to keep your account secure' }}</p>
+
+        <form method="POST" action="{{ url_for('change_password') }}">
+          <div class="form-group">
+            <label class="form-label">{{ T.current_password if T.current_password else 'Current Password' }}</label>
+            <input class="form-input" type="password" name="current_password" required
+                   placeholder="{{ T.enter_current_password if T.enter_current_password else 'Enter current password' }}">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">{{ T.new_password if T.new_password else 'New Password' }}</label>
+            <input class="form-input" type="password" name="new_password" required
+                   placeholder="{{ T.enter_new_password if T.enter_new_password else 'Enter new password' }}">
+            <p class="form-help">{{ T.password_requirements if T.password_requirements else 'At least 8 characters, with uppercase, lowercase & a number' }}</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">{{ T.confirm_new_password if T.confirm_new_password else 'Confirm New Password' }}</label>
+            <input class="form-input" type="password" name="confirm_password" required
+                   placeholder="{{ T.reenter_new_password if T.reenter_new_password else 'Re-enter new password' }}">
+          </div>
+
+          <button class="btn btn-primary btn-full" type="submit" style="margin-top:1.5rem;">
+            🔒 {{ T.update_password if T.update_password else 'Update Password' }}
+          </button>
+        </form>
+      </div>
+
+      <!-- Theme Settings -->
+      <div id="theme" class="settings-section">
+        <div class="section-header">
+          <span class="section-icon">🎨</span>
+          <h2 class="section-title">{{ T.theme_settings if T.theme_settings else 'Theme Settings' }}</h2>
+        </div>
+        
+        <p style="color:var(--muted);margin-bottom:1.5rem;">{{ T.theme_description if T.theme_description else 'Choose your preferred theme for the app' }}</p>
+        
+        <form method="POST" action="{{ url_for('update_theme') }}">
+          <div class="theme-options">
+            <div class="theme-option {% if session.get('theme') == 'light' %}selected{% endif %}" onclick="selectTheme('light')">
+              <div class="theme-icon">☀️</div>
+              <div class="theme-name">{{ T.light_theme if T.light_theme else 'Light Theme' }}</div>
+            </div>
+            <div class="theme-option {% if session.get('theme') == 'dark' %}selected{% endif %}" onclick="selectTheme('dark')">
+              <div class="theme-icon">🌙</div>
+              <div class="theme-name">{{ T.dark_theme if T.dark_theme else 'Dark Theme' }}</div>
+            </div>
+          </div>
+          <input type="hidden" name="theme" id="selectedTheme" value="{{ session.get('theme', 'light') }}">
+          <button class="btn btn-primary btn-full" type="submit">
+            💾 {{ T.save_btn if T.save_btn else 'Save Theme' }}
+          </button>
+        </form>
+      </div>
+
+      <!-- Notification Settings -->
+      <div id="notifications" class="settings-section">
+        <div class="section-header">
+          <span class="section-icon">🔔</span>
+          <h2 class="section-title">{{ T.notification_settings if T.notification_settings else 'Notification Settings' }}</h2>
+        </div>
+        
+        <form method="POST" action="{{ url_for('update_notifications') }}">
+          <div class="toggle-container">
+            <div class="toggle-label">
+              <div class="toggle-title">{{ T.expiry_alerts if T.expiry_alerts else 'Expiry Alerts' }}</div>
+              <div class="toggle-desc">{{ T.expiry_alerts_desc if T.expiry_alerts_desc else 'Get notified when items are about to expire' }}</div>
+            </div>
+            <div class="toggle-switch {% if session.get('expiry_alerts', True) %}active{% endif %}" onclick="toggleSwitch(this)">
+              <input type="checkbox" name="expiry_alerts" {% if session.get('expiry_alerts', True) %}checked{% endif %} style="display:none;">
+            </div>
+          </div>
+          
+          <div class="toggle-container">
+            <div class="toggle-label">
+              <div class="toggle-title">{{ T.daily_reminders if T.daily_reminders else 'Daily Reminders' }}</div>
+              <div class="toggle-desc">{{ T.daily_reminders_desc if T.daily_reminders_desc else 'Receive daily summary of expiring items' }}</div>
+            </div>
+            <div class="toggle-switch {% if session.get('daily_reminders', False) %}active{% endif %}" onclick="toggleSwitch(this)">
+              <input type="checkbox" name="daily_reminders" {% if session.get('daily_reminders', False) %}checked{% endif %} style="display:none;">
+            </div>
+          </div>
+          
+          <div class="toggle-container">
+            <div class="toggle-label">
+              <div class="toggle-title">{{ T.email_notifications if T.email_notifications else 'Email Notifications' }}</div>
+              <div class="toggle-desc">{{ T.email_notifications_desc if T.email_notifications_desc else 'Receive notifications via email' }}</div>
+            </div>
+            <div class="toggle-switch {% if session.get('email_notifications', False) %}active{% endif %}" onclick="toggleSwitch(this)">
+              <input type="checkbox" name="email_notifications" {% if session.get('email_notifications', False) %}checked{% endif %} style="display:none;">
+            </div>
+          </div>
+          
+          <button class="btn btn-primary btn-full" type="submit">
+            💾 {{ T.save_btn if T.save_btn else 'Save Preferences' }}
+          </button>
+        </form>
+      </div>
+
+      <!-- Storage & Data -->
+      <div id="storage" class="settings-section">
+        <div class="section-header">
+          <span class="section-icon">💾</span>
+          <h2 class="section-title">{{ T.storage_data if T.storage_data else 'Storage & Data' }}</h2>
+        </div>
+        
+        <div class="data-card">
+          <div class="data-card-title">
+            📦 {{ T.total_products_stored if T.total_products_stored else 'Total Products Stored' }}
+          </div>
+          <div class="data-card-value">{{ products_count or 0 }}</div>
+          <div class="data-card-desc">{{ T.data_storage_info if T.data_storage_info else 'Your data is stored locally on this device' }}</div>
+        </div>
+        
+        <div class="btn-group">
+          <a href="{{ url_for('export_data') }}" class="btn btn-success" style="flex:1;">
+            📥 {{ T.export_data if T.export_data else 'Export Data' }}
+          </a>
+          <a href="{{ url_for('index') }}" class="btn btn-primary" style="flex:1;">
+            👁️ {{ T.view_all_products if T.view_all_products else 'View All Products' }}
+          </a>
+        </div>
+        
+        <form method="POST" action="{{ url_for('clear_data') }}" style="margin-top:2rem;">
+          <div class="data-card" style="border-color:var(--punchy-coral);background:linear-gradient(135deg,var(--card),rgba(255,107,107,0.08));">
+            <div class="data-card-title" style="color:var(--punchy-coral);">
+              ⚠️ {{ T.clear_data if T.clear_data else 'Clear All Data' }}
+            </div>
+            <div class="data-card-desc">{{ T.clear_data_desc if T.clear_data_desc else 'Permanently delete all your data' }}</div>
+          </div>
+          <button class="btn btn-danger btn-full" type="submit">
+            🗑️ {{ T.clear_data if T.clear_data else 'Clear All Data' }}
+          </button>
+        </form>
+      </div>
+
+      <!-- Language Settings -->
+      <div id="language" class="settings-section">
+        <div class="section-header">
+          <span class="section-icon">🌐</span>
+          <h2 class="section-title">{{ T.language_settings if T.language_settings else 'Language Settings' }}</h2>
+        </div>
+        
+        <p style="color:var(--muted);margin-bottom:1.5rem;">{{ T.language_description if T.language_description else 'Choose your preferred language' }}</p>
+        
+        <form method="POST" action="{{ url_for('update_language') }}">
+          <div class="language-options">
+            <div class="language-option {% if lang == 'en' %}selected{% endif %}" onclick="selectLanguage('en')">
+              <div class="language-flag">🇬🇧</div>
+              <div class="language-name">{{ T.english if T.english else 'English' }}</div>
+            </div>
+            <div class="language-option {% if lang == 'hi' %}selected{% endif %}" onclick="selectLanguage('hi')">
+              <div class="language-flag">🇮🇳</div>
+              <div class="language-name">{{ T.hindi if T.hindi else 'Hindi' }}</div>
+            </div>
+          </div>
+          <input type="hidden" name="language" id="selectedLanguage" value="{{ lang }}">
+          <button class="btn btn-primary btn-full" type="submit">
+            💾 {{ T.save_btn if T.save_btn else 'Save Language' }}
+          </button>
+        </form>
+      </div>
+
+      <!-- Help & Feedback -->
+      <div id="help" class="settings-section">
+        <div class="section-header">
+          <span class="section-icon">❓</span>
+          <h2 class="section-title">{{ T.help_feedback if T.help_feedback else 'Help & Feedback' }}</h2>
+        </div>
+        
+        <div class="data-card">
+          <div class="data-card-title">
+            📧 {{ T.help_support if T.help_support else 'Help & Support' }}
+          </div>
+          <div class="data-card-desc">{{ T.help_description if T.help_description else 'Contact us for help and support' }}</div>
+          <div style="margin-top:1rem;font-family:monospace;color:var(--digital-lavender);">{{ T.help_email if T.help_email else 'help@predictashelf.com' }}</div>
+        </div>
+        
+        <form method="POST" action="{{ url_for('submit_feedback') }}">
+          <div class="form-group">
+            <label class="form-label">{{ T.rate_app if T.rate_app else 'Rate the App' }}</label>
+            <div class="rating-stars">
+              <span class="star" onclick="setRating(1)">⭐</span>
+              <span class="star" onclick="setRating(2)">⭐</span>
+              <span class="star" onclick="setRating(3)">⭐</span>
+              <span class="star" onclick="setRating(4)">⭐</span>
+              <span class="star active" onclick="setRating(5)">⭐</span>
+            </div>
+            <input type="hidden" name="rating" id="ratingValue" value="5">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">{{ T.your_feedback if T.your_feedback else 'Your Feedback' }}</label>
+            <textarea class="form-textarea" name="feedback" placeholder="{{ T.feedback_description if T.feedback_description else 'We would love to hear your thoughts' }}"></textarea>
+          </div>
+          
+          <button class="btn btn-primary btn-full" type="submit">
+            📤 {{ T.send_feedback if T.send_feedback else 'Send Feedback' }}
+          </button>
+        </form>
+      </div>
+
+      <!-- Invite Friend -->
+      <div id="invite" class="settings-section">
+        <div class="section-header">
+          <span class="section-icon">📧</span>
+          <h2 class="section-title">{{ T.invite_friend if T.invite_friend else 'Invite a Friend' }}</h2>
+        </div>
+        
+        <p style="color:var(--muted);margin-bottom:1.5rem;">{{ T.invite_friend_desc if T.invite_friend_desc else 'Share Predicta Shelf with your friends' }}</p>
+        
+        <div class="invite-box">
+          <div class="invite-link">
+            <span>🔗</span>
+            <span id="inviteUrl">https://predictashelf.com/signup?ref={{ user.username }}</span>
+          </div>
+          <div class="btn-group">
+            <button class="btn btn-primary" onclick="copyInviteLink()" style="flex:1;">
+              📋 {{ T.copy_link if T.copy_link else 'Copy Link' }}
+            </button>
+            <a href="mailto:?subject=Join Predicta Shelf&body=Check out Predicta Shelf - Smart Expiry Tracker! https://predictashelf.com/signup?ref={{ user.username }}" class="btn btn-success" style="flex:1;">
+              📧 {{ T.share_via_email if T.share_via_email else 'Share via Email' }}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- App Updates -->
+      <div id="updates" class="settings-section">
+        <div class="section-header">
+          <span class="section-icon">📱</span>
+          <h2 class="section-title">{{ T.app_updates if T.app_updates else 'App Updates' }}</h2>
+        </div>
+        
+        <div class="data-card">
+          <div class="data-card-title">
+            📱 {{ T.current_version if T.current_version else 'Current Version' }}
+          </div>
+          <div class="data-card-value">1.1</div>
+        </div>
+        
+        <div style="margin:1.5rem 0;">
+          <h3 style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:1rem;">{{ T.update_history if T.update_history else 'Update History' }}</h3>
+          
+          <div class="update-item">
+            <div class="update-version">{{ T.version_1_1 if T.version_1_1 else 'Version 1.1 - Added Settings Page' }}</div>
+            <div style="font-size:0.8rem;color:var(--muted);">January 2025</div>
+          </div>
+          
+          <div class="update-item">
+            <div class="update-version">{{ T.version_1_0 if T.version_1_0 else 'Version 1.0 - Initial Release' }}</div>
+            <div style="font-size:0.8rem;color:var(--muted);">December 2024</div>
+          </div>
+        </div>
+        
+        <div class="data-card" style="background:linear-gradient(135deg,var(--card),rgba(16,185,129,0.08));border-color:var(--success);">
+          <div class="data-card-title" style="color:var(--success);">
+            ✅ {{ T.up_to_date if T.up_to_date else 'You are using the latest version' }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Section Navigation
+function showSection(sectionId) {
+  // Hide all sections
+  document.querySelectorAll('.settings-section').forEach(section => {
+    section.classList.remove('active');
+  });
+  
+  // Remove active class from all nav items
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.classList.remove('active');
+  });
+  
+  // Show selected section
+  document.getElementById(sectionId).classList.add('active');
+  
+  // Add active class to clicked nav item
+  event.currentTarget.classList.add('active');
+}
+
+// Theme Selection
+function selectTheme(theme) {
+  // Update all theme option selections
+  document.querySelectorAll('.theme-option').forEach(option => {
+    option.classList.remove('selected');
+  });
+  event.currentTarget.classList.add('selected');
+  document.getElementById('selectedTheme').value = theme;
+}
+
+// Language Selection
+function selectLanguage(lang) {
+  document.querySelectorAll('.language-option').forEach(option => {
+    option.classList.remove('selected');
+  });
+  event.currentTarget.classList.add('selected');
+  document.getElementById('selectedLanguage').value = lang;
+}
+
+// Toggle Switch
+function toggleSwitch(element) {
+  element.classList.toggle('active');
+  const checkbox = element.querySelector('input[type="checkbox"]');
+  checkbox.checked = !checkbox.checked;
+}
+
+// Rating Stars
+function setRating(rating) {
+  document.querySelectorAll('.star').forEach((star, index) => {
+    if (index < rating) {
+      star.classList.add('active');
+    } else {
+      star.classList.remove('active');
+    }
+  });
+  document.getElementById('ratingValue').value = rating;
+}
+
+// Copy Invite Link
+function copyInviteLink() {
+  const inviteUrl = document.getElementById('inviteUrl').textContent;
+  navigator.clipboard.writeText(inviteUrl).then(() => {
+    alert('{{ T.link_copied if T.link_copied else "Link copied to clipboard!" }}');
+  });
+}
+</script>
+</body>
+</html>
